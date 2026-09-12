@@ -127,3 +127,15 @@ Abre `http://localhost:3000` — ahí ves el sitio corriendo en tu máquina.
   `kebab-case` para el resto
 - Variables de entorno nuevas van en `.env.example` (sin valores reales) y
   se avisan a José para que las agregue en Vercel
+
+## 8. Relación con score-app
+
+Este repo es **independiente** de `score-app` (donde viven el diagnóstico,
+el panel interno y la API). No asumas acceso ni visibilidad sobre ese
+código — es otro repo, con otro dueño de cambios, y tú no tienes acceso a
+él.
+
+El único punto de contacto entre los dos es el endpoint del formulario de
+precalificación (sección 1 y `.env.example`). Si necesitas cambiar qué
+datos envía el formulario o cómo los envía, avísale a José antes de
+mergear — es quien ve los dos lados y coordina ese contrato.
