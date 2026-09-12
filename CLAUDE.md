@@ -71,7 +71,44 @@ npm run dev
 ```
 Abre `http://localhost:3000` — ahí ves el sitio corriendo en tu máquina.
 
-## 4. Flujo de trabajo (siempre así, sin excepciones)
+## 4. Estructura del proyecto — dónde vive cada cosa
+
+El andamiaje base ya está creado (Next.js App Router + TypeScript +
+Tailwind). Así se organiza, para que ubiques rápido dónde maquetar cada
+sección del Figma:
+
+- `app/layout.tsx` — layout raíz (`lang="es"`, metadata). Ahí va el script
+  de analítica cuando se defina el proveedor (usa
+  `NEXT_PUBLIC_ANALYTICS_ID`).
+- `app/page.tsx` — ensambla las 5 secciones en orden. No agregues
+  secciones nuevas aquí sin confirmarlo (ver sección 1, es cambio de
+  alcance).
+- `components/sections/` — un componente por sección, cada uno con
+  encabezado simple y `// TODO: reemplazar con el diseño de Figma`:
+  - `Hero.tsx` — presentación de SCORE
+  - `Servicios.tsx` — los 4 servicios (SCORE, TRACE, VALUE, CAPITAL)
+  - `VideoVenta.tsx` — espacio para el video de venta
+  - `Faq.tsx` — preguntas frecuentes
+  - `Contacto.tsx` — contacto, incluye `<LeadForm />`
+
+  Maqueta cada sección reemplazando el contenido de su TODO — no hace
+  falta tocar las demás para trabajar en una.
+- `components/LeadForm.tsx` — formulario de precalificación (nombre,
+  email). Hace `POST` a `NEXT_PUBLIC_LEAD_FORM_ENDPOINT`; si esa variable
+  está vacía, solo hace `console.log` del payload (ver la nota del
+  endpoint temporal en la sección 1). Si el Figma pide más campos,
+  agrégalos aquí.
+- `lib/campaign.ts` — captura `utm_source`, `utm_campaign` y
+  `utm_medium` de la URL y los adjunta al envío del formulario. No
+  debería hacer falta tocarlo salvo que cambie qué se registra del
+  origen del lead.
+
+**Nota técnica — no lo quites:** `next.config.ts` tiene `agentRules:
+false`. Es a propósito: sin eso, `next dev`/`next build` reescribe este
+mismo `CLAUDE.md` agregándole un bloque autogenerado de reglas para
+agentes cada vez que alguien corre el proyecto.
+
+## 5. Flujo de trabajo (siempre así, sin excepciones)
 
 Hay dos ramas fijas con roles distintos:
 
@@ -116,24 +153,25 @@ maquetación sigue estos pasos:
    que corresponde — no es parte del flujo normal de una tarea de
    maquetación.
 
-## 5. Antes de abrir un PR — checklist rápido
+## 6. Antes de abrir un PR — checklist rápido
 
 - [ ] `npm run dev` corre sin errores en tu máquina
+- [ ] `npm run lint` pasa sin errores
 - [ ] Probaste la vista en móvil (herramientas de desarrollador del navegador)
 - [ ] El commit/PR describe qué cambió, en lenguaje simple
 - [ ] No tocaste nada fuera de la sección/tarea que te pidieron
 - [ ] Si dudaste de algo de alcance o diseño, lo preguntaste antes de decidir
 
-## 6. Stack
+## 7. Stack
 
-- **Next.js** (React) — despliegue en **Vercel** (`develop` → QA, `main` →
-  producción; ver sección 4)
+- **Next.js** (React, App Router) — despliegue en **Vercel** (`develop` →
+  QA, `main` → producción; ver sección 5)
+- **TypeScript**
+- **Tailwind CSS** — ya instalado y en uso, es el que toca
+- **ESLint** — corre con `npm run lint`
 - Repo en **GitHub**
-- Estilos: a definir en la primera semana (Tailwind es lo más probable dado
-  el resto del stack de Colmena — confírmalo con José antes de instalar
-  nada nuevo)
 
-## 7. Convenciones rápidas
+## 8. Convenciones rápidas
 
 - Idioma de commits, PRs y comentarios de código: **español**
 - Nombres de archivos y componentes: `PascalCase` para componentes,
@@ -141,7 +179,7 @@ maquetación sigue estos pasos:
 - Variables de entorno nuevas van en `.env.example` (sin valores reales) y
   se avisan a José para que las agregue en Vercel
 
-## 8. Relación con score-app
+## 9. Relación con score-app
 
 Este repo es **independiente** de `score-app` (donde viven el diagnóstico,
 el panel interno y la API). No asumas acceso ni visibilidad sobre ese
