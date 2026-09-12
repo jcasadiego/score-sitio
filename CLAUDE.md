@@ -73,11 +73,20 @@ Abre `http://localhost:3000` — ahí ves el sitio corriendo en tu máquina.
 
 ## 4. Flujo de trabajo (siempre así, sin excepciones)
 
-**Nunca se hace push directo a `main`.** Todo cambio sigue estos pasos:
+Hay dos ramas fijas con roles distintos:
 
-1. **Actualiza tu `main` local** antes de empezar algo nuevo:
+- **`develop`** — rama de integración. Aquí llegan todos los PR de lo que
+  se va construyendo. Vercel despliega esta rama a **QA**.
+- **`main`** — estrictamente producción. Solo se actualiza vía PR desde
+  `develop` cuando José decide que lo que hay en QA está listo para salir a
+  producción. Vercel despliega esta rama a **producción**.
+
+**Nunca se hace push directo a `develop` ni a `main`.** Todo cambio de
+maquetación sigue estos pasos:
+
+1. **Actualiza tu `develop` local** antes de empezar algo nuevo:
    ```bash
-   git checkout main
+   git checkout develop
    git pull
    ```
 2. **Crea una rama nueva** con nombre corto y descriptivo:
@@ -92,7 +101,8 @@ Abre `http://localhost:3000` — ahí ves el sitio corriendo en tu máquina.
    git add .
    git commit -m "Agrega sección hero con imagen del Figma"
    ```
-4. **Sube la rama y abre un Pull Request hacia `main`:**
+4. **Sube la rama y abre un Pull Request hacia `develop`** (no hacia
+   `main`):
    ```bash
    git push -u origin feature/seccion-hero
    ```
@@ -101,8 +111,10 @@ Abre `http://localhost:3000` — ahí ves el sitio corriendo en tu máquina.
    página principal"). No asumas que quien lo lee es programador.
 5. **Vercel genera un preview automático** de esa rama — el link aparece en
    el propio PR. Revísalo tú mismo antes de avisar que está listo.
-6. **José revisa y fusiona.** Nadie más mezcla a `main`. Una vez fusionado,
-   el sitio se actualiza solo en producción (Vercel despliega desde `main`).
+6. **José revisa y fusiona a `develop`.** Nadie más mezcla PRs. El paso de
+   `develop` a `main` (QA → producción) lo hace José aparte, cuando decide
+   que corresponde — no es parte del flujo normal de una tarea de
+   maquetación.
 
 ## 5. Antes de abrir un PR — checklist rápido
 
@@ -114,7 +126,8 @@ Abre `http://localhost:3000` — ahí ves el sitio corriendo en tu máquina.
 
 ## 6. Stack
 
-- **Next.js** (React) — despliegue en **Vercel**
+- **Next.js** (React) — despliegue en **Vercel** (`develop` → QA, `main` →
+  producción; ver sección 4)
 - Repo en **GitHub**
 - Estilos: a definir en la primera semana (Tailwind es lo más probable dado
   el resto del stack de Colmena — confírmalo con José antes de instalar
