@@ -153,7 +153,28 @@ maquetación sigue estos pasos:
    que corresponde — no es parte del flujo normal de una tarea de
    maquetación.
 
-## 6. Antes de abrir un PR — checklist rápido
+## 6. CI — verificación automática
+
+Cada PR hacia `develop` o `main`, y cada push a esas ramas, corre un
+workflow de GitHub Actions (`.github/workflows/ci.yml`) que hace:
+
+1. `npm ci` (instala dependencias exactas del lockfile)
+2. `npm run lint`
+3. `npm run build` (esto corre el chequeo de tipos de TypeScript también)
+
+Si el check queda en rojo en el PR, arréglalo antes de avisar que está
+listo para revisión — no es algo que José deba revisar a mano.
+`npm run dev` no corre en CI porque es un servidor interactivo; el build
+de producción es lo que valida que todo compile.
+
+Por ahora no hay tests automatizados (no hay lógica compleja que
+testear todavía — es maquetado). Cuando el `LeadForm` u otro componente
+tenga lógica real (validaciones, distintos estados, etc.), ahí sí
+conviene agregar tests puntuales con Vitest/React Testing Library en
+vez de mantener el CI solo con lint+build — coméntalo con José antes de
+instalar el framework de testing.
+
+## 7. Antes de abrir un PR — checklist rápido
 
 - [ ] `npm run dev` corre sin errores en tu máquina
 - [ ] `npm run lint` pasa sin errores
@@ -162,7 +183,7 @@ maquetación sigue estos pasos:
 - [ ] No tocaste nada fuera de la sección/tarea que te pidieron
 - [ ] Si dudaste de algo de alcance o diseño, lo preguntaste antes de decidir
 
-## 7. Stack
+## 8. Stack
 
 - **Next.js** (React, App Router) — despliegue en **Vercel** (`develop` →
   QA, `main` → producción; ver sección 5)
@@ -171,7 +192,7 @@ maquetación sigue estos pasos:
 - **ESLint** — corre con `npm run lint`
 - Repo en **GitHub**
 
-## 8. Convenciones rápidas
+## 9. Convenciones rápidas
 
 - Idioma de commits, PRs y comentarios de código: **español**
 - Nombres de archivos y componentes: `PascalCase` para componentes,
@@ -179,7 +200,7 @@ maquetación sigue estos pasos:
 - Variables de entorno nuevas van en `.env.example` (sin valores reales) y
   se avisan a José para que las agregue en Vercel
 
-## 9. Relación con score-app
+## 10. Relación con score-app
 
 Este repo es **independiente** de `score-app` (donde viven el diagnóstico,
 el panel interno y la API). No asumas acceso ni visibilidad sobre ese
