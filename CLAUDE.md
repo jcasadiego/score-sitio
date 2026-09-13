@@ -33,10 +33,14 @@ Si algo del Figma no calza con esta lista, es una señal de alcance — se lo
 dices a José, no lo decides sobre la marcha.
 
 **Nota sobre el formulario de precalificación:** el endpoint real vive en
-`score-app` (la API de SCORE), que todavía se está construyendo. Mientras esa
-API no esté lista, el formulario apunta a un destino temporal (por ejemplo,
-un log a consola o un webhook de prueba) — José te dice cuándo cambiar al
-endpoint definitivo. No bloquees tu trabajo esperando la API real.
+`score-app` (la API de SCORE), que todavía se está construyendo. El
+formulario nunca le pega directo a `score-app` desde el navegador — pasa
+por un proxy propio (`app/api/lead/route.ts`) para no depender de la
+configuración de CORS de `score-app` y para que la URL/credencial del
+endpoint real no viaje al cliente. Mientras esa API no esté lista, ese
+proxy apunta a un destino temporal (hace `console.log` del payload) —
+José te dice cuándo definir `LEAD_FORM_API_URL` con el endpoint
+definitivo. No bloquees tu trabajo esperando la API real.
 
 ## 2. Quién hace qué
 
@@ -94,10 +98,15 @@ sección del Figma:
   Maqueta cada sección reemplazando el contenido de su TODO — no hace
   falta tocar las demás para trabajar en una.
 - `components/LeadForm.tsx` — formulario de precalificación (nombre,
-  email). Hace `POST` a `NEXT_PUBLIC_LEAD_FORM_ENDPOINT`; si esa variable
-  está vacía, solo hace `console.log` del payload (ver la nota del
-  endpoint temporal en la sección 1). Si el Figma pide más campos,
-  agrégalos aquí.
+  email). Hace `POST` a `/api/lead` (este mismo sitio, no a `score-app`
+  directo). Si el Figma pide más campos, agrégalos aquí.
+- `app/api/lead/route.ts` — proxy server-side del formulario: recibe el
+  POST de `LeadForm.tsx` y lo reenvía a `score-app` usando
+  `LEAD_FORM_API_URL` (variable sin `NEXT_PUBLIC_`, solo la lee el
+  servidor). Si esa variable está vacía, solo hace `console.log` del
+  payload (ver la nota del endpoint temporal en la sección 1). No cambies
+  este archivo para que apunte directo a `score-app` desde el cliente —
+  es a propósito, evita problemas de CORS entre dominios.
 - `lib/campaign.ts` — captura `utm_source`, `utm_campaign` y
   `utm_medium` de la URL y los adjunta al envío del formulario. No
   debería hacer falta tocarlo salvo que cambie qué se registra del

@@ -20,19 +20,15 @@ export default function LeadForm() {
       ...getCampaignData(),
     };
 
-    const endpoint = process.env.NEXT_PUBLIC_LEAD_FORM_ENDPOINT;
-
     try {
-      if (!endpoint) {
-        // TODO: endpoint temporal — José confirma cuándo cambiar a la API real de score-app
-        console.log("[LeadForm] payload (sin endpoint configurado):", payload);
-      } else {
-        await fetch(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-      }
+      const response = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) throw new Error("La API respondió con error");
+
       setStatus("sent");
       setNombre("");
       setEmail("");

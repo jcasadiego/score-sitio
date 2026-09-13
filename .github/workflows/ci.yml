@@ -28,5 +28,5 @@ jobs:
       - name: Build (incluye chequeo de tipos)
         run: npm run build
         env:
-          NEXT_PUBLIC_LEAD_FORM_ENDPOINT: ""
+          LEAD_FORM_API_URL: ""
           NEXT_PUBLIC_ANALYTICS_ID: ""
