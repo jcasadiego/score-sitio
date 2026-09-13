@@ -208,6 +208,13 @@ instalar el framework de testing.
   `kebab-case` para el resto
 - Variables de entorno nuevas van en `.env.example` (sin valores reales) y
   se avisan a José para que las agregue en Vercel
+- Toda variable `NEXT_PUBLIC_*` viaja al navegador (queda visible en el
+  bundle del cliente). Nunca pongas ahí una API key o secreto real — si
+  hace falta una credencial, va en una variable sin ese prefijo
+- Colores, tipografía y espaciados van como tokens en `app/globals.css`
+  (`--primary`, `--secondary`, `--accent`, etc.), no como valores sueltos
+  en cada componente — así un cambio del Figma se actualiza en un solo
+  lugar
 
 ## 10. Relación con score-app
 
