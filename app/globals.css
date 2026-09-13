@@ -1,26 +1,29 @@
 @import "tailwindcss";
 
+/* Tokens de diseño del sitio. Reemplazar los valores (no los nombres) por
+   los del Figma del cliente antes de maquetar cada sección — así toda la
+   UI usa las mismas variables (bg-primary, text-accent, etc.) en vez de
+   colores sueltos repetidos por componente. */
 :root {
+  --primary: #171717; /* TODO: color primario del Figma */
+  --secondary: #ffffff; /* TODO: color secundario del Figma */
+  --accent: #171717; /* TODO: color de acento/CTA del Figma */
   --background: #ffffff;
   --foreground: #171717;
 }
 
 @theme inline {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
