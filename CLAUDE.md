@@ -111,11 +111,16 @@ sección del Figma:
   `utm_medium` de la URL y los adjunta al envío del formulario. No
   debería hacer falta tocarlo salvo que cambie qué se registra del
   origen del lead.
+- `app/robots.ts` y `app/sitemap.ts` — SEO básico del alcance. Usan
+  `NEXT_PUBLIC_SITE_URL`; en local caen a `http://localhost:3000` si esa
+  variable está vacía. No deberías necesitar tocarlos.
 
 **Nota técnica — no lo quites:** `next.config.ts` tiene `agentRules:
 false`. Es a propósito: sin eso, `next dev`/`next build` reescribe este
 mismo `CLAUDE.md` agregándole un bloque autogenerado de reglas para
-agentes cada vez que alguien corre el proyecto.
+agentes cada vez que alguien corre el proyecto. También trae los headers
+de seguridad base del sitio (`X-Frame-Options`, `Referrer-Policy`, etc.)
+— no hace falta tocarlos para maquetar.
 
 ## 5. Flujo de trabajo (siempre así, sin excepciones)
 
@@ -127,8 +132,10 @@ Hay dos ramas fijas con roles distintos:
   `develop` cuando José decide que lo que hay en QA está listo para salir a
   producción. Vercel despliega esta rama a **producción**.
 
-**Nunca se hace push directo a `develop` ni a `main`.** Todo cambio de
-maquetación sigue estos pasos:
+**Nunca se hace push directo a `develop` ni a `main`.** Esto además está
+forzado por branch protection en GitHub (requiere PR + el check de CI en
+verde) — no es solo una convención. Todo cambio de maquetación sigue
+estos pasos:
 
 1. **Actualiza tu `develop` local** antes de empezar algo nuevo:
    ```bash
