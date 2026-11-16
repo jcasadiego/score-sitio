@@ -13,9 +13,8 @@ diseña, se maqueta.
 **Incluye:**
 - Hasta 5 secciones: presentación de SCORE, los 4 servicios, video de venta,
   preguntas frecuentes, contacto
-- Formulario de precalificación conectado al sistema (endpoint a confirmar
-  con José — ver `.env.example`)
-- Registro del lead con su origen de campaña
+- Formulario de precalificación conectado a la API de SCORE
+- Registro del lead con su origen de campaña (UTM)
 - Responsive: móvil y tablet
 - SEO básico + SSL
 - Integración de analítica
@@ -32,15 +31,11 @@ alcance):**
 Si algo del Figma no calza con esta lista, es una señal de alcance — se lo
 dices a José, no lo decides sobre la marcha.
 
-**Nota sobre el formulario de precalificación:** el endpoint real vive en
-`score-app` (la API de SCORE), que todavía se está construyendo. El
-formulario nunca le pega directo a `score-app` desde el navegador — pasa
-por un proxy propio (`app/api/lead/route.ts`) para no depender de la
-configuración de CORS de `score-app` y para que la URL/credencial del
-endpoint real no viaje al cliente. Mientras esa API no esté lista, ese
-proxy apunta a un destino temporal (hace `console.log` del payload) —
-José te dice cuándo definir `LEAD_FORM_API_URL` con el endpoint
-definitivo. No bloquees tu trabajo esperando la API real.
+**El sitio es estático.** Se publica como archivos HTML, CSS y JS ya
+generados (`output: "export"`), sin servidor propio. Por eso no puede tener
+rutas de API (`app/api/...`), Server Actions, `cookies()`, `headers()` ni nada
+que necesite un servidor de Next en producción. Si el Figma pide algo así,
+avísale a José.
 
 ## 2. Quién hace qué
 
@@ -48,17 +43,24 @@ definitivo. No bloquees tu trabajo esperando la API real.
   guía, abres PRs. No tomas decisiones de arquitectura, alcance ni stack por
   tu cuenta.
 - **José:** revisa y aprueba/fusiona cada PR, resuelve dudas de Git o
-  despliegue, decide cualquier cambio de alcance o de stack.
+  despliegue, decide cualquier cambio de alcance o de stack, y es el dueño
+  del despliegue en Render.
 
-Si te atoras con Git, GitHub o el despliegue en Vercel: **detente y pregúntale
-a José** en vez de improvisar algo que toque configuración de dominio,
-servidor o variables de entorno de producción.
+**Archivos que no tocas en un PR de maquetación** (si crees que hace falta,
+pregúntale a José): `render.yaml`, `next.config.ts`, `.github/`,
+`lib/lead-api.ts` y `lib/campaign.ts`. En `components/LeadForm.tsx` puedes
+cambiar el diseño y los textos, pero no los campos ni lo que se envía (ver
+sección 10).
+
+Si te atoras con Git, GitHub o el despliegue: **detente y pregúntale a
+José** en vez de improvisar algo que toque dominio, servidor o variables de
+entorno.
 
 ## 3. Setup — primera vez
 
 **Necesitas antes de empezar:**
 1. Cuenta de GitHub (pídele a José que te agregue como colaborador del repo)
-2. Node.js instalado (versión LTS — 20 o superior)
+2. Node.js **22** (la versión que usan el CI y Render)
 3. Git configurado en tu máquina:
    ```bash
    git config --global user.name "Tu Nombre"
@@ -73,22 +75,24 @@ npm install
 cp .env.example .env.local   # pídele a José los valores que falten
 npm run dev
 ```
-Abre `http://localhost:3000` — ahí ves el sitio corriendo en tu máquina.
+Abre `http://localhost:3003` — ahí ves el sitio corriendo en tu máquina.
+
+El formulario envía a la API de SCORE (`NEXT_PUBLIC_API_URL`). Si no la
+tienes corriendo, el formulario muestra error al enviar: es normal, no
+bloquea la maquetación.
 
 ## 4. Estructura del proyecto — dónde vive cada cosa
 
-El andamiaje base ya está creado (Next.js App Router + TypeScript +
-Tailwind). Así se organiza, para que ubiques rápido dónde maquetar cada
-sección del Figma:
+Next.js App Router + TypeScript + Tailwind:
 
 - `app/layout.tsx` — layout raíz (`lang="es"`, metadata). Ahí va el script
-  de analítica cuando se defina el proveedor (usa
+  de analítica cuando José apruebe el proveedor (usa
   `NEXT_PUBLIC_ANALYTICS_ID`).
 - `app/page.tsx` — ensambla las 5 secciones en orden. No agregues
   secciones nuevas aquí sin confirmarlo (ver sección 1, es cambio de
   alcance).
 - `components/sections/` — un componente por sección, cada uno con
-  encabezado simple y `// TODO: reemplazar con el diseño de Figma`:
+  `// TODO: reemplazar con el diseño de Figma`:
   - `Hero.tsx` — presentación de SCORE
   - `Servicios.tsx` — los 4 servicios (SCORE, TRACE, VALUE, CAPITAL)
   - `VideoVenta.tsx` — espacio para el video de venta
@@ -97,45 +101,35 @@ sección del Figma:
 
   Maqueta cada sección reemplazando el contenido de su TODO — no hace
   falta tocar las demás para trabajar en una.
-- `components/LeadForm.tsx` — formulario de precalificación (nombre,
-  email). Hace `POST` a `/api/lead` (este mismo sitio, no a `score-app`
-  directo). Si el Figma pide más campos, agrégalos aquí.
-- `app/api/lead/route.ts` — proxy server-side del formulario: recibe el
-  POST de `LeadForm.tsx` y lo reenvía a `score-app` usando
-  `LEAD_FORM_API_URL` (variable sin `NEXT_PUBLIC_`, solo la lee el
-  servidor). Si esa variable está vacía, solo hace `console.log` del
-  payload (ver la nota del endpoint temporal en la sección 1). No cambies
-  este archivo para que apunte directo a `score-app` desde el cliente —
-  es a propósito, evita problemas de CORS entre dominios.
-- `lib/campaign.ts` — captura `utm_source`, `utm_campaign` y
-  `utm_medium` de la URL y los adjunta al envío del formulario. No
-  debería hacer falta tocarlo salvo que cambie qué se registra del
-  origen del lead.
-- `app/robots.ts` y `app/sitemap.ts` — SEO básico del alcance. Usan
-  `NEXT_PUBLIC_SITE_URL`; en local caen a `http://localhost:3000` si esa
-  variable está vacía. No deberías necesitar tocarlos.
+- `components/LeadForm.tsx` — formulario de precalificación: nombre, email
+  y "¿qué describe mejor tu caso?" (las 4 familias). Los textos de cada
+  familia los da el Figma; los valores (`PROJECT`, `B2B`, ...) no se
+  cambian.
+- `lib/lead-api.ts` — envía el formulario a la API de SCORE y traduce la
+  respuesta (enviado, datos inválidos, demasiados envíos, error).
+- `lib/campaign.ts` — guarda los `utm_*` de la URL y los adjunta al envío.
+- `app/robots.ts` y `app/sitemap.ts` — SEO básico. Usan
+  `NEXT_PUBLIC_SITE_URL`.
+- `public/` — imágenes, íconos y el video, **ya comprimidos** (sección 7).
+- `render.yaml` — despliegue en Render y cabeceras de seguridad (lo
+  mantiene José).
 
 **Nota técnica — no lo quites:** `next.config.ts` tiene `agentRules:
-false`. Es a propósito: sin eso, `next dev`/`next build` reescribe este
-mismo `CLAUDE.md` agregándole un bloque autogenerado de reglas para
-agentes cada vez que alguien corre el proyecto. También trae los headers
-de seguridad base del sitio (`X-Frame-Options`, `Referrer-Policy`, etc.)
-— no hace falta tocarlos para maquetar.
+false`. Sin eso, `next dev`/`next build` reescribe este mismo `CLAUDE.md`
+agregándole un bloque autogenerado de reglas para agentes.
 
 ## 5. Flujo de trabajo (siempre así, sin excepciones)
 
 Hay dos ramas fijas con roles distintos:
 
-- **`develop`** — rama de integración. Aquí llegan todos los PR de lo que
-  se va construyendo. Vercel despliega esta rama a **QA**.
+- **`develop`** — rama de integración. Aquí llegan todos los PR. Render
+  despliega esta rama a **QA** automáticamente cuando el CI pasa.
 - **`main`** — estrictamente producción. Solo se actualiza vía PR desde
-  `develop` cuando José decide que lo que hay en QA está listo para salir a
-  producción. Vercel despliega esta rama a **producción**.
+  `develop` cuando José decide que lo que hay en QA está listo.
 
-**Nunca se hace push directo a `develop` ni a `main`.** Esto además está
-forzado por branch protection en GitHub (requiere PR + el check de CI en
-verde) — no es solo una convención. Todo cambio de maquetación sigue
-estos pasos:
+**Nunca se hace push directo a `develop` ni a `main`.** Está forzado por
+branch protection en GitHub (requiere PR + el check `lint-and-build` en
+verde). Todo cambio sigue estos pasos:
 
 1. **Actualiza tu `develop` local** antes de empezar algo nuevo:
    ```bash
@@ -146,8 +140,8 @@ estos pasos:
    ```bash
    git checkout -b feature/seccion-hero
    ```
-   Prefijos sugeridos: `feature/` (algo nuevo), `fix/` (corrección),
-   `style/` (ajuste visual/CSS).
+   Prefijos: `feature/` (algo nuevo), `fix/` (corrección), `style/` (ajuste
+   visual/CSS).
 3. **Trabaja y confirma en commits pequeños**, en español, en modo
    instrucción:
    ```bash
@@ -159,78 +153,108 @@ estos pasos:
    ```bash
    git push -u origin feature/seccion-hero
    ```
-   Al abrir el PR en GitHub, escribe 2-3 líneas simples: **qué cambió y por
-   qué** (ej. "Agregué la sección de hero siguiendo el Figma, faltaba en la
-   página principal"). No asumas que quien lo lee es programador.
-5. **Vercel genera un preview automático** de esa rama — el link aparece en
-   el propio PR. Revísalo tú mismo antes de avisar que está listo.
+   En el PR escribe 2-3 líneas simples: **qué cambió y por qué**. No asumas
+   que quien lo lee es programador.
+5. **No hay vista previa automática por PR.** Revisa tu cambio en tu
+   máquina (`npm run dev`, y en móvil con las herramientas de desarrollador)
+   antes de avisar que está listo. Después del merge, el cambio aparece en
+   QA en unos minutos.
 6. **José revisa y fusiona a `develop`.** Nadie más mezcla PRs. El paso de
-   `develop` a `main` (QA → producción) lo hace José aparte, cuando decide
-   que corresponde — no es parte del flujo normal de una tarea de
-   maquetación.
+   `develop` a `main` lo hace José aparte.
 
 ## 6. CI — verificación automática
 
-Cada PR hacia `develop` o `main`, y cada push a esas ramas, corre un
-workflow de GitHub Actions (`.github/workflows/ci.yml`) que hace:
+Cada PR hacia `develop` o `main` corre en GitHub Actions:
 
-1. `npm ci` (instala dependencias exactas del lockfile)
-2. `npm run lint`
-3. `npm run build` (esto corre el chequeo de tipos de TypeScript también)
+- **CI** (`ci.yml`, check `lint-and-build`): `npm ci`, `npm audit
+  --audit-level=high` (falla si una dependencia tiene una vulnerabilidad
+  alta o crítica), `npm run lint` y `npm run build` (exporta el sitio e
+  incluye el chequeo de tipos).
+- **security** (`security.yml`): busca secretos subidos por error
+  (gitleaks), revisa las dependencias nuevas y analiza el código (CodeQL).
+- **Dependabot** propone cada semana PRs con parches de dependencias; los
+  revisa José.
 
-Si el check queda en rojo en el PR, arréglalo antes de avisar que está
-listo para revisión — no es algo que José deba revisar a mano.
-`npm run dev` no corre en CI porque es un servidor interactivo; el build
-de producción es lo que valida que todo compile.
+Si un check queda en rojo, arréglalo antes de avisar que está listo. Si el
+rojo viene de `npm audit` y tu PR no tocó dependencias, avísale a José: se
+corrige en un PR aparte.
 
-Por ahora no hay tests automatizados (no hay lógica compleja que
-testear todavía — es maquetado). Cuando el `LeadForm` u otro componente
-tenga lógica real (validaciones, distintos estados, etc.), ahí sí
-conviene agregar tests puntuales con Vitest/React Testing Library en
-vez de mantener el CI solo con lint+build — coméntalo con José antes de
-instalar el framework de testing.
+Por ahora no hay tests automatizados. Si un componente gana lógica real,
+coméntalo con José antes de instalar un framework de testing.
 
-## 7. Antes de abrir un PR — checklist rápido
+## 7. Seguridad y privacidad — reglas del sitio
+
+El sitio recoge datos personales (nombre y email) y forma parte de una
+plataforma que debe cumplir SOC 2, ISO 27001 e ISO 27701. Lo que te toca:
+
+1. **Sin secretos en el repo ni en el sitio.** Todo lo que lleva
+   `NEXT_PUBLIC_` queda visible para cualquiera que abra el sitio. El sitio
+   no usa API keys, contraseñas ni tokens; si algo te pide uno, para y
+   pregúntale a José. Nunca subas `.env.local`.
+2. **Nada de terceros sin aprobación.** No agregues scripts, fuentes de
+   Google u otro CDN, iframes (YouTube, Vimeo, mapas), píxeles, chats ni
+   widgets sin que José lo apruebe. Un servicio que recibe datos de los
+   visitantes es un proveedor nuevo, y además la política de seguridad del
+   sitio (CSP en `render.yaml`) bloquea lo que no esté autorizado: en el
+   navegador verás el error en la consola. Las fuentes van con `next/font`
+   (se descargan al compilar y se sirven desde el propio sitio).
+3. **Imágenes y video livianos, dentro de `public/`.** Comprime antes de
+   subir (WebP/AVIF para imágenes, video en MP4 H.264 de pocos MB). El plan
+   de Render tiene un tope de tráfico al mes; un video pesado lo agota y deja
+   el sitio caído hasta el mes siguiente.
+4. **No registres datos personales.** Nada de `console.log` con el nombre, el
+   email o lo que se envía en el formulario.
+5. **No insertes HTML a mano.** Nada de `dangerouslySetInnerHTML` ni de armar
+   HTML con texto externo.
+6. **Aviso de privacidad.** El formulario lleva un enlace al aviso de
+   privacidad (el texto lo entrega el cliente; hay un `TODO` en
+   `LeadForm.tsx`). No pidas más datos de los que el formulario ya tiene.
+7. **No afirmar certificaciones.** Ningún texto del sitio dice que SCORE o
+   Music Finance Pro está "certificado", "SOC 2 compliant", "cumple ISO" o
+   parecido: hoy no es cierto. Si el Figma lo trae, avísale a José.
+8. **Accesibilidad básica:** cada campo con su `label`, imágenes con `alt`,
+   contraste suficiente, todo usable con teclado. Los mensajes del
+   formulario se anuncian (`aria-live`): no lo quites al maquetarlo.
+
+## 8. Antes de abrir un PR — checklist rápido
 
 - [ ] `npm run dev` corre sin errores en tu máquina
-- [ ] `npm run lint` pasa sin errores
-- [ ] Probaste la vista en móvil (herramientas de desarrollador del navegador)
+- [ ] `npm run lint` y `npm run build` pasan sin errores
+- [ ] Probaste la vista en móvil y tablet
+- [ ] Sin errores de "Content Security Policy" en la consola del navegador
+- [ ] Imágenes y video comprimidos; nada cargado desde otros sitios
 - [ ] El commit/PR describe qué cambió, en lenguaje simple
 - [ ] No tocaste nada fuera de la sección/tarea que te pidieron
 - [ ] Si dudaste de algo de alcance o diseño, lo preguntaste antes de decidir
 
-## 8. Stack
+## 9. Stack y convenciones
 
-- **Next.js** (React, App Router) — despliegue en **Vercel** (`develop` →
-  QA, `main` → producción; ver sección 5)
-- **TypeScript**
-- **Tailwind CSS** — ya instalado y en uso, es el que toca
-- **ESLint** — corre con `npm run lint`
+- **Next.js** (React, App Router) exportado como sitio estático, desplegado
+  en **Render** (`develop` → QA; producción la configura José)
+- **TypeScript**, **Tailwind CSS**, **ESLint** (`npm run lint`)
 - Repo en **GitHub**
 
-## 9. Convenciones rápidas
+Convenciones:
 
 - Idioma de commits, PRs y comentarios de código: **español**
 - Nombres de archivos y componentes: `PascalCase` para componentes,
   `kebab-case` para el resto
 - Variables de entorno nuevas van en `.env.example` (sin valores reales) y
-  se avisan a José para que las agregue en Vercel
-- Toda variable `NEXT_PUBLIC_*` viaja al navegador (queda visible en el
-  bundle del cliente). Nunca pongas ahí una API key o secreto real — si
-  hace falta una credencial, va en una variable sin ese prefijo
+  se avisan a José para que las agregue en Render. Se leen al compilar:
+  cambiarlas exige redesplegar
 - Colores, tipografía y espaciados van como tokens en `app/globals.css`
   (`--primary`, `--secondary`, `--accent`, etc.), no como valores sueltos
-  en cada componente — así un cambio del Figma se actualiza en un solo
-  lugar
+  en cada componente
 
 ## 10. Relación con score-app
 
-Este repo es **independiente** de `score-app` (donde viven el diagnóstico,
-el panel interno y la API). No asumas acceso ni visibilidad sobre ese
-código — es otro repo, con otro dueño de cambios, y tú no tienes acceso a
-él.
+Este repo es **independiente** de `score-app` (diagnóstico, panel interno y
+API). No tienes acceso a ese repo.
 
-El único punto de contacto entre los dos es el endpoint del formulario de
-precalificación (sección 1 y `.env.example`). Si necesitas cambiar qué
-datos envía el formulario o cómo los envía, avísale a José antes de
-mergear — es quien ve los dos lados y coordina ese contrato.
+El único punto de contacto es el formulario: el navegador envía a
+`POST {NEXT_PUBLIC_API_URL}/api/v1/leads/prequalification` con `name`,
+`email`, `family` (`PROJECT`, `B2B`, `PROFESSIONAL` o `CATALOG`) y los UTM
+(`utmSource`, `utmMedium`, `utmCampaign`). La API acepta 5 envíos por minuto
+por visitante y rechaza cualquier campo de más. Si necesitas cambiar qué
+datos envía el formulario o cómo, avísale a José antes: es un contrato entre
+los dos repos y él coordina ambos lados.
