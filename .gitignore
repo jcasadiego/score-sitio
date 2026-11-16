@@ -17,8 +17,6 @@
 .env*.local
 .env
 
-# vercel
-.vercel
 
 # misc
 .DS_Store

@@ -1,0 +1,13 @@
+# Parches de dependencias y de las actions (fijadas por SHA). Van a `develop`
+# como cualquier PR: pasan por CI y José los revisa antes de mergear.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    target-branch: develop
+    schedule: { interval: weekly }
+    open-pull-requests-limit: 5
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: develop
+    schedule: { interval: weekly }
