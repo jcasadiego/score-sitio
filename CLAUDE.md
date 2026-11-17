@@ -196,8 +196,13 @@ plataforma que debe cumplir SOC 2, ISO 27001 e ISO 27701. Lo que te toca:
    no usa API keys, contraseñas ni tokens; si algo te pide uno, para y
    pregúntale a José. Nunca subas `.env.local`.
 2. **Nada de terceros sin aprobación.** No agregues scripts, fuentes de
-   Google u otro CDN, iframes (YouTube, Vimeo, mapas), píxeles, chats ni
-   widgets sin que José lo apruebe. Un servicio que recibe datos de los
+   Google u otro CDN, iframes (Vimeo, mapas), píxeles, chats ni widgets sin
+   que José lo apruebe. **Excepción ya aprobada: el video de venta en
+   YouTube.** Va como `<iframe>` en `VideoVenta.tsx` con el dominio
+   `https://www.youtube-nocookie.com/embed/<ID>` (no `youtube.com`: así
+   YouTube no pone cookies hasta que el visitante le da play). Ese dominio
+   ya está permitido en la CSP; la URL del video la pones tú, sin pedir
+   permiso. Un servicio que recibe datos de los
    visitantes es un proveedor nuevo, y además la política de seguridad del
    sitio (CSP en `render.yaml`) bloquea lo que no esté autorizado: en el
    navegador verás el error en la consola. Las fuentes van con `next/font`
