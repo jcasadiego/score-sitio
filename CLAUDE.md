@@ -11,8 +11,11 @@ Finance Pro. El diseño ya viene definido por el cliente en Figma — aquí no s
 diseña, se maqueta.
 
 **Incluye:**
-- Hasta 5 secciones: presentación de SCORE, los 4 servicios, video de venta,
-  preguntas frecuentes, contacto
+- Las secciones aprobadas por el cliente (2026-11-17): presentación de
+  SCORE, los 4 servicios, video de venta, por qué, nosotros, aliados,
+  preguntas frecuentes, equipo y contacto
+- Animaciones y efectos visuales del diseño del cliente, incluida la
+  animación 3D de partículas del Hero (ver sección 7.9)
 - Formulario de precalificación conectado a la API de SCORE
 - Registro del lead con su origen de campaña (UTM)
 - Responsive: móvil y tablet
@@ -25,7 +28,7 @@ alcance):**
   cliente)
 - Blog o CMS
 - Otros idiomas
-- Secciones adicionales a las 5 acordadas
+- Secciones adicionales a las aprobadas (lista de arriba)
 - Compra o configuración del dominio
 
 Si algo del Figma no calza con esta lista, es una señal de alcance — se lo
@@ -88,19 +91,20 @@ Next.js App Router + TypeScript + Tailwind:
 - `app/layout.tsx` — layout raíz (`lang="es"`, metadata). Ahí va el script
   de analítica cuando José apruebe el proveedor (usa
   `NEXT_PUBLIC_ANALYTICS_ID`).
-- `app/page.tsx` — ensambla las 5 secciones en orden. No agregues
+- `app/page.tsx` — ensambla las secciones aprobadas en orden. No agregues
   secciones nuevas aquí sin confirmarlo (ver sección 1, es cambio de
   alcance).
-- `components/sections/` — un componente por sección, cada uno con
-  `// TODO: reemplazar con el diseño de Figma`:
-  - `Hero.tsx` — presentación de SCORE
+- `components/Nav.tsx` y `components/SiteFooter.tsx` — menú fijo y pie.
+- `components/sections/` — un componente por sección:
+  - `Hero.tsx` — presentación de SCORE (aquí va la animación 3D)
   - `Servicios.tsx` — los 4 servicios (SCORE, TRACE, VALUE, CAPITAL)
-  - `VideoVenta.tsx` — espacio para el video de venta
+  - `VideoVenta.tsx` — video de venta (el botón queda; el video se conecta
+    cuando el cliente entregue la URL)
+  - `PorQue.tsx`, `Nosotros.tsx`, `Aliados.tsx`, `Equipo.tsx`
   - `Faq.tsx` — preguntas frecuentes
   - `Contacto.tsx` — contacto, incluye `<LeadForm />`
 
-  Maqueta cada sección reemplazando el contenido de su TODO — no hace
-  falta tocar las demás para trabajar en una.
+  Cada sección se trabaja por separado — no hace falta tocar las demás.
 - `components/LeadForm.tsx` — formulario de precalificación: nombre, email
   y "¿qué describe mejor tu caso?" (las 4 familias). Los textos de cada
   familia los da el Figma; los valores (`PROJECT`, `B2B`, ...) no se
@@ -216,6 +220,12 @@ plataforma que debe cumplir SOC 2, ISO 27001 e ISO 27701. Lo que te toca:
    contraste suficiente, todo usable con teclado. Los mensajes del
    formulario se anuncian (`aria-live`): no lo quites al maquetarlo.
 
+9. **Animaciones y 3D.** Están aprobadas (canvas, CSS, WebGL). Si
+   necesitas una librería (por ejemplo `three`), se instala con `npm` —
+   nunca por CDN ni `<script>` externo — y se menciona en el PR. Respeta
+   `prefers-reduced-motion` (sin animación o una versión quieta) y cuida
+   que no ponga lento el sitio en móvil.
+
 ## 8. Antes de abrir un PR — checklist rápido
 
 - [ ] `npm run dev` corre sin errores en tu máquina
@@ -242,9 +252,11 @@ Convenciones:
 - Variables de entorno nuevas van en `.env.example` (sin valores reales) y
   se avisan a José para que las agregue en Render. Se leen al compilar:
   cambiarlas exige redesplegar
-- Colores, tipografía y espaciados van como tokens en `app/globals.css`
-  (`--primary`, `--secondary`, `--accent`, etc.), no como valores sueltos
-  en cada componente
+- Colores, tipografía y espaciados: el diseño (colores incluidos) ya lo
+  aprobó el cliente y se pueden ajustar sin pedir permiso. Si un color se
+  repite en varios componentes, conviene llevarlo a un token en
+  `app/globals.css` (`--accent`, `--secondary`, etc.), pero no es requisito
+  para subir un PR
 
 ## 10. Relación con score-app
 

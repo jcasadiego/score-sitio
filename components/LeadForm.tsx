@@ -9,9 +9,9 @@ type Status = "idle" | "sending" | "sent" | "invalid" | "rate-limited" | "error"
 // TODO: textos de cada familia según el Figma del cliente. Los valores
 // (PROJECT, B2B, ...) no se cambian: son los que espera la API.
 const FAMILY_LABELS: Record<Family, string> = {
-  PROJECT: "Proyecto",
-  B2B: "B2B",
-  PROFESSIONAL: "Profesional",
+  PROJECT: "Artista o proyecto",
+  B2B: "Empresa",
+  PROFESSIONAL: "Evento",
   CATALOG: "Catálogo",
 };
 
