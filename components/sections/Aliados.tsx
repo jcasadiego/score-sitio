@@ -1,89 +1,49 @@
 const ALIADOS = [
-  { src: "/ally-base.png", alt: "Base" },
-  { src: "/ally-break-event.png", alt: "Break Event" },
-  { src: "/ally-creative-capital.png", alt: "Creative Capital" },
-  { src: "/ally-e33.png", alt: "E33" },
-  { src: "/ally-escuela-de-pitch.png", alt: "Escuela de Pitch" },
+  { src: "/ally-base.png", alt: "BASE", h: 54 },
+  { src: "/ally-escuela-de-pitch.png", alt: "Escuela de Pitch", h: 62 },
+  { src: "/ally-e33.png", alt: "E33", h: 44 },
+  { src: "/ally-creative-capital.png", alt: "Creative Capital Consulting", h: 56 },
+  { src: "/ally-break-event.png", alt: "break|event", h: 36 },
 ];
 
-// Duplicate for seamless infinite scroll
-const ALL = [...ALIADOS, ...ALIADOS];
+// 5 real + 15 aria-hidden (3 duplicates) = 20 total, matches version-c
+const ALL = [
+  ...ALIADOS,
+  ...ALIADOS.map((a) => ({ ...a, alt: "", aria: true })),
+  ...ALIADOS.map((a) => ({ ...a, alt: "", aria: true })),
+  ...ALIADOS.map((a) => ({ ...a, alt: "", aria: true })),
+];
 
 export default function Aliados() {
   return (
     <section
       id="aliados"
-      style={{
-        padding: "clamp(72px, 10vw, 140px) 0",
-        background: "#050505",
-        overflow: "hidden",
-      }}
+      className="sec persp"
+      style={{ maxWidth: 1320, margin: "0 auto", padding: "100px 24px 70px" }}
     >
-      <div
-        style={{
-          maxWidth: 1320,
-          margin: "0 auto",
-          padding: "0 clamp(20px, 4vw, 48px)",
-          marginBottom: 48,
-        }}
-      >
-        <p
-          className="rv eyebrow"
-          style={{ textAlign: "center" }}
-        >
+      <div className="rv">
+        <p className="eyebrow" style={{ textAlign: "center" }}>
           Nuestros aliados estratégicos
         </p>
-      </div>
-
-      {/* Infinite scroll carousel */}
-      <div
-        style={{
-          overflow: "hidden",
-          padding: "10px 0",
-          WebkitMaskImage: "linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent)",
-          maskImage: "linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent)",
-        }}
-      >
-        <div
-          aria-label="Logos de aliados"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            width: "max-content",
-            animation: "amq 38s linear infinite",
-          }}
-        >
-          {ALL.map((ally, i) => (
-            <div
-              key={i}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-                width: 240,
-                height: 112,
-                marginRight: 18,
-                borderRadius: 22,
-                border: "1px solid rgba(255,255,255,0.08)",
-                background: "rgba(255,255,255,0.035)",
-                transition: "background 0.4s, border-color 0.4s, transform 0.4s",
-              }}
-            >
-              <img
-                src={ally.src}
-                alt={ally.alt}
-                style={{
-                  display: "block",
-                  width: "auto",
-                  maxWidth: 180,
-                  maxHeight: 60,
-                  objectFit: "contain",
-                  opacity: 0.72,
-                }}
-              />
+        <div style={{ marginTop: 28 }}>
+          <div className="amq">
+            <div className="amq-track">
+              {ALL.map((ally, i) => (
+                <span
+                  key={i}
+                  className="al"
+                  aria-hidden={"aria" in ally && ally.aria ? true : undefined}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={ally.src}
+                    alt={ally.alt}
+                    style={{ height: ally.h }}
+                  />
+                </span>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </section>

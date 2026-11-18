@@ -7,6 +7,9 @@
   --secondary: #A7A9AC;
   --muted: #939598;
   --line: rgba(255, 255, 255, 0.08);
+  /* version-c accent colors — overridden per section/card via inline style */
+  --a: #A7A9AC;
+  --b: #FFFFFF;
 }
 
 @theme inline {
@@ -926,3 +929,14 @@ a:hover { color: #F0F0F0; }
 .g3 { display: grid; }
 @media (max-width: 1000px) { .g3 { grid-template-columns: minmax(0, 1fr) !important; } }
 .g3 .card { height: auto !important; min-height: 350px; }
+
+/* ── Missing classes from version-c ── */
+.vlayer { z-index: 4; pointer-events: none; }
+.vq { padding-left: 18px; border-left: 2px solid rgba(255,255,255,.55); color: #E6E7E8; }
+.vw { font-family: var(--font-sans, 'Quicksand'), sans-serif; font-weight: 600; color: #FFFFFF; background: linear-gradient(90deg,rgba(255,255,255,.9),rgba(255,255,255,.25)) left 100%/100% 1.5px no-repeat; padding-bottom: 1px; }
+.tabs-col { display: flex; flex-direction: column; }
+.tabs-col .tab { width: 100%; }
+@media (max-width: 1000px) {
+  .tabs-col { flex-direction: row; flex-wrap: wrap; gap: 4px; }
+  .tabs-col .tab { width: auto; }
+}
