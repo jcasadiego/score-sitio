@@ -30,7 +30,7 @@ export default function LeadForm() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!family) return; // el `required` del select ya lo impide
+    if (!family) return;
     setStatus("sending");
 
     const result = await sendLead({ name, email, family, ...getCampaignData() });
@@ -46,64 +46,128 @@ export default function LeadForm() {
 
   const invalidLabels = invalidFields.map((field) => FIELD_LABELS[field] ?? field);
 
+  if (status === "sent") {
+    return (
+      <div style={{ padding: "40px 0", textAlign: "center" }}>
+        <svg
+          width="56"
+          height="56"
+          viewBox="0 0 56 56"
+          fill="none"
+          style={{ display: "block", margin: "0 auto 20px" }}
+          aria-hidden="true"
+        >
+          <circle cx="28" cy="28" r="27" stroke="var(--b, #A7A9AC)" strokeWidth="1.5" />
+          <polyline
+            className="okc"
+            points="16,28 24,36 40,20"
+          />
+        </svg>
+        <p
+          style={{
+            fontFamily: "var(--font-quicksand), sans-serif",
+            fontSize: 22,
+            fontWeight: 400,
+            color: "#fff",
+            marginBottom: 10,
+          }}
+        >
+          ¡Gracias!
+        </p>
+        <p style={{ fontSize: 14, color: "#C8C9CB", lineHeight: 1.6 }}>
+          Te contactaremos en menos de 24 horas hábiles.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md">
-      <div className="flex flex-col gap-1">
-        <label htmlFor="lead-name" className="text-sm font-medium">
+    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+      <h3
+        id="f-title"
+        style={{
+          fontFamily: "var(--font-quicksand), sans-serif",
+          fontSize: 26,
+          fontWeight: 400,
+          color: "#fff",
+          marginBottom: 4,
+        }}
+      >
+        Comienza tu SCORE
+      </h3>
+      <p style={{ fontSize: 14, color: "#C8C9CB", marginBottom: 8, lineHeight: 1.5 }}>
+        Menos de 2 minutos. Te escribimos en un máximo de 24 horas hábiles.
+      </p>
+
+      {/* Family selector */}
+      <div>
+        <p
+          id="f-fam"
+          style={{ fontSize: 13, color: "#D9DADC", marginBottom: 10 }}
+        >
+          ¿Qué quieres diagnosticar?
+        </p>
+        <div
+          role="group"
+          aria-labelledby="f-fam"
+          style={{ display: "flex", flexWrap: "wrap", gap: 8 }}
+        >
+          {FAMILIES.map((value) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setFamily(value)}
+              className={`fpill${family === value ? " on" : ""}`}
+            >
+              {FAMILY_LABELS[value]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Name */}
+      <div>
+        <label htmlFor="f-name" className="flabel">
           Nombre
         </label>
         <input
-          id="lead-name"
+          id="f-name"
           name="name"
           type="text"
           autoComplete="name"
           required
           minLength={2}
           maxLength={120}
+          placeholder="Tu nombre"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="border rounded px-3 py-2"
+          className={`fi${invalidFields.includes("name") ? " bad" : ""}`}
         />
+        {invalidFields.includes("name") && (
+          <span className="ferr">Revisa este campo</span>
+        )}
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="lead-email" className="text-sm font-medium">
+      {/* Email */}
+      <div>
+        <label htmlFor="f-email" className="flabel">
           Email
         </label>
         <input
-          id="lead-email"
+          id="f-email"
           name="email"
           type="email"
           autoComplete="email"
           required
           maxLength={254}
+          placeholder="tu@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border rounded px-3 py-2"
+          className={`fi${invalidFields.includes("email") ? " bad" : ""}`}
         />
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <label htmlFor="lead-family" className="text-sm font-medium">
-          ¿Qué describe mejor tu caso?
-        </label>
-        <select
-          id="lead-family"
-          name="family"
-          required
-          value={family}
-          onChange={(e) => setFamily(e.target.value as Family | "")}
-          className="border rounded px-3 py-2"
-        >
-          <option value="" disabled>
-            Elige una opción
-          </option>
-          {FAMILIES.map((value) => (
-            <option key={value} value={value}>
-              {FAMILY_LABELS[value]}
-            </option>
-          ))}
-        </select>
+        {invalidFields.includes("email") && (
+          <span className="ferr">Revisa este campo</span>
+        )}
       </div>
 
       {/* TODO: enlace al aviso de privacidad cuando el cliente entregue el texto. */}
@@ -111,31 +175,54 @@ export default function LeadForm() {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="bg-black text-white rounded px-4 py-2 disabled:opacity-50"
+        className="btn-s"
+        style={{ marginTop: 8 }}
       >
-        {status === "sending" ? "Enviando..." : "Enviar"}
+        {status === "sending" ? (
+          "Enviando…"
+        ) : (
+          <>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M7 17L17 7" />
+              <path d="M8 7h9v9" />
+            </svg>
+            Hacer mi SCORE
+          </>
+        )}
       </button>
 
       {/* `aria-live`: el lector de pantalla anuncia el resultado del envío. */}
-      <div aria-live="polite" className="text-sm">
-        {status === "sending" && <p>Enviando… puede tardar hasta un minuto.</p>}
-        {status === "sent" && (
-          <p className="text-green-700">¡Gracias! Te contactaremos pronto.</p>
+      <div aria-live="polite">
+        {status === "sending" && (
+          <p style={{ fontSize: 13, color: "#C8C9CB" }}>
+            Enviando… puede tardar hasta un minuto.
+          </p>
         )}
         {status === "invalid" && (
-          <p className="text-red-700">
+          <p style={{ fontSize: 13, color: "#FDA4AF" }}>
             {invalidLabels.length > 0
               ? `Revisa estos datos: ${invalidLabels.join(", ")}.`
               : "Revisa los datos e intenta de nuevo."}
           </p>
         )}
         {status === "rate-limited" && (
-          <p className="text-red-700">
+          <p style={{ fontSize: 13, color: "#FDA4AF" }}>
             Recibimos varios envíos seguidos. Intenta de nuevo en un minuto.
           </p>
         )}
         {status === "error" && (
-          <p className="text-red-700">Hubo un problema al enviar. Intenta de nuevo.</p>
+          <p style={{ fontSize: 13, color: "#FDA4AF" }}>
+            Hubo un problema al enviar. Intenta de nuevo.
+          </p>
         )}
       </div>
     </form>

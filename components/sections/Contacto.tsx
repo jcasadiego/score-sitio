@@ -3,7 +3,7 @@ import LeadForm from "@/components/LeadForm";
 export default function Contacto() {
   return (
     <section
-      id="contacto"
+      id="form"
       style={{
         position: "relative",
         padding: "clamp(72px, 10vw, 140px) clamp(20px, 4vw, 48px) clamp(80px, 12vw, 160px)",
@@ -72,31 +72,18 @@ export default function Contacto() {
           {/* Left: headline */}
           <div>
             <p
-              className="rv"
-              style={{
-                fontFamily: "var(--font-questrial), monospace",
-                fontSize: 12,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "#B5B7BA",
-                marginBottom: 20,
-              }}
+              className="rv eyebrow"
+              style={{ marginBottom: 20 }}
             >
               Todo empieza por entender el momentum real de tu proyecto
             </p>
 
             <h2
-              className="rv"
-              style={{
-                fontSize: "clamp(34px, 4.5vw, 64px)",
-                fontWeight: 300,
-                lineHeight: 1.1,
-                letterSpacing: "-0.025em",
-                marginBottom: 24,
-              }}
+              className="rv caps h2"
+              style={{ marginBottom: 24 }}
             >
-              SCORE,{" "}
-              <span style={{ color: "#6D6E71" }}>la puerta de entrada</span>
+              Antes de decidir /{" "}
+              <span className="grad">entiende tu momentum.</span>
             </h2>
 
             <p
