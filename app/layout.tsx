@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Quicksand, Questrial } from "next/font/google";
 import "./globals.css";
-import Nav from "@/components/Nav";
 import SiteFooter from "@/components/SiteFooter";
 
 const quicksand = Quicksand({
@@ -31,8 +30,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${quicksand.variable} ${questrial.variable}`}
     >
       <body className="min-h-full flex flex-col">
-        <Nav />
         {children}
+        <div className="boltstrip" aria-hidden="true" />
         <SiteFooter />
         {/* TODO: script de analítica — cuando se defina el proveedor (GA/Plausible/etc.),
             inicializarlo aquí usando process.env.NEXT_PUBLIC_ANALYTICS_ID */}
