@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 
 type TeamMember = {
   name: string;
@@ -9,12 +8,13 @@ type TeamMember = {
   img: string;
   paras: { t: string }[];
   vision: string;
+  noBio?: boolean;
 };
 
 const TEAM: TeamMember[] = [
   {
     name: "Otto Ballaben-Araneo",
-    role: "CEO & Founder — Music Finance Pro",
+    role: "CEO & Founder",
     img: "/founder-otto.webp",
     paras: [
       { t: "Especialista en industria musical, economía cultural y desarrollo estratégico de negocios creativos, con más de 20 años de trayectoria y participación en más de 400 proyectos vinculados al ecosistema musical y cultural." },
@@ -26,7 +26,7 @@ const TEAM: TeamMember[] = [
   },
   {
     name: "Javier (Xavi) Martínez",
-    role: "Co-Founder, CFO & CTO — Music Finance Pro",
+    role: "Co-Founder · CFO & CTO",
     img: "/team-xavi.webp",
     paras: [
       { t: "Ejecutivo, inversionista estratégico y líder especializado en DeepTech, Venture Capital, inteligencia artificial y tecnologías de frontera, con una trayectoria orientada a la convergencia entre capital, innovación tecnológica y transformación empresarial." },
@@ -38,7 +38,7 @@ const TEAM: TeamMember[] = [
   },
   {
     name: "Gwen Mora Zapata",
-    role: "Head of Client Operations & Strategic Communications — Music Finance Pro",
+    role: "Head of Client Operations & Strategic Communications",
     img: "/team-gwen.webp",
     paras: [
       { t: "Comunicadora social y ejecutiva especializada en gestión de proyectos, consultoría, planificación estratégica y comunicaciones corporativas, con experiencia en la coordinación de iniciativas empresariales, culturales y musicales." },
@@ -48,6 +48,14 @@ const TEAM: TeamMember[] = [
     ],
     vision: "Conectar estrategia, comunicación y gestión humana para transformar procesos complejos en experiencias profesionales claras, coordinadas y orientadas a generar confianza y valor.",
   },
+  {
+    name: "Juan Pablo Alonzo",
+    role: "Music Data Manager",
+    img: "/team-juanpablo.webp",
+    paras: [],
+    vision: "",
+    noBio: true,
+  },
 ];
 
 export default function Equipo() {
@@ -56,336 +64,84 @@ export default function Equipo() {
   return (
     <section
       id="equipo"
-      style={{
-        padding: "clamp(72px, 10vw, 140px) clamp(20px, 4vw, 48px)",
-        background: "#050505",
-      }}
+      className="sec persp"
+      style={{ maxWidth: 1320, margin: "0 auto", padding: "120px 24px 50px" }}
     >
-      <div style={{ maxWidth: 1320, margin: "0 auto" }}>
-        {/* Header */}
-        <div
-          className="rv"
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-            gap: 28,
-            marginBottom: "clamp(48px, 6vw, 80px)",
-          }}
-        >
-          <div style={{ maxWidth: 470 }}>
-            <p className="eyebrow" style={{ marginBottom: 16 }}>
-              Nuestro equipo directivo
-            </p>
-            <h2 className="h2">
-              Inteligencia Financiera con{" "}
-              <span className="grad">Sensibilidad Cultural.</span>
-            </h2>
-          </div>
+      <div className="rv dirhead">
+        <div>
+          <p className="eyebrow">Nuestro equipo directivo</p>
+          <h2 className="h2" style={{ marginTop: 16, maxWidth: 640 }}>
+            Inteligencia Financiera con{" "}
+            <span className="grad">Sensibilidad Cultural.</span>
+          </h2>
         </div>
-
-        {/* Team grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-            gap: 18,
-          }}
-        >
-          {TEAM.map((member) => (
-            <article
-              key={member.name}
-              className="rv"
-              style={{
-                position: "relative",
-                padding: "14px 14px 24px",
-                borderRadius: 28,
-                border: "1px solid rgba(255,255,255,0.08)",
-                background: "linear-gradient(180deg,#151515,#0A0A0A)",
-                display: "flex",
-                flexDirection: "column",
-                transition: "border-color 0.4s",
-              }}
-            >
-              {/* Photo */}
-              <div
-                style={{
-                  position: "relative",
-                  aspectRatio: "3/4",
-                  borderRadius: "150px 150px 20px 20px",
-                  overflow: "hidden",
-                  background: "#0A0A0A",
-                }}
-              >
-                <Image
-                  src={member.img}
-                  alt={member.name}
-                  fill
-                  sizes="(max-width: 760px) 50vw, (max-width: 1000px) 33vw, 300px"
-                  style={{
-                    objectFit: "cover",
-                    objectPosition: "50% 18%",
-                    filter: "grayscale(1) contrast(1.05) brightness(0.88)",
-                  }}
-                />
-                <div
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: "linear-gradient(180deg, transparent 45%, rgba(167,169,172,0.4)), linear-gradient(135deg, rgba(167,169,172,0.2), transparent 60%)",
-                    mixBlendMode: "screen",
-                    opacity: 0.85,
-                  }}
-                />
-              </div>
-
-              {/* Name & role */}
-              <h3
-                style={{
-                  margin: "20px 8px 0",
-                  fontFamily: "var(--font-quicksand), sans-serif",
-                  fontSize: 19,
-                  fontWeight: 400,
-                  lineHeight: 1.25,
-                  color: "#F5F5F5",
-                }}
-              >
-                {member.name}
-              </h3>
-              <p
-                style={{
-                  margin: "8px 8px 0",
-                  fontSize: 13.5,
-                  lineHeight: 1.45,
-                  color: "#B5B7BA",
-                  flex: 1,
-                }}
-              >
-                {member.role}
-              </p>
-
-              {/* Bio button */}
-              <button
-                type="button"
-                onClick={() => setBio(member)}
-                style={{
-                  margin: "18px 8px 0",
-                  alignSelf: "flex-start",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: 0,
-                  border: 0,
-                  background: "none",
-                  color: "#fff",
-                  fontFamily: "var(--font-questrial), sans-serif",
-                  fontSize: 13.5,
-                  cursor: "pointer",
-                }}
-              >
-                Ver perfil
-                <span
-                  style={{
-                    display: "inline-grid",
-                    placeItems: "center",
-                    width: 34,
-                    height: 34,
-                    borderRadius: "50%",
-                    background: "#fff",
-                    color: "#000",
-                    fontStyle: "normal",
-                    transition: "transform 0.35s cubic-bezier(.2,.8,.2,1)",
-                  }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                    <path d="M7 17L17 7" />
-                    <path d="M8 7h9v9" />
-                  </svg>
-                </span>
-              </button>
-            </article>
-          ))}
+        <div className="dirlead">
+          <p className="lead">En Music Finance Pro reunimos experiencia en industria musical, economía cultural, finanzas, inversión, tecnología e inteligencia artificial para desarrollar una nueva forma de comprender, diagnosticar y valorar el potencial económico de la música.</p>
+          <p>Nuestra estructura integra liderazgo estratégico, capacidades financieras y tecnológicas avanzadas, y una gestión centrada en las personas. La tecnología amplifica nuestra capacidad de análisis; el conocimiento experto aporta contexto, supervisión y responsabilidad.</p>
         </div>
       </div>
 
-      {/* Bio modal */}
+      <div className="team dirs" style={{ marginTop: 56 }}>
+        {TEAM.map((member) => (
+          <article key={member.name} className="tm rv">
+            <div className="tph">
+              <img src={member.img} alt={member.name} />
+            </div>
+            <h4>{member.name}</h4>
+            <p>{member.role}</p>
+            {!member.noBio && (
+              <button
+                type="button"
+                className="dmore"
+                onClick={() => setBio(member)}
+                aria-label={`Ver perfil completo de ${member.name}`}
+              >
+                Ver perfil
+                <i aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14" />
+                    <path d="M13 6l6 6-6 6" />
+                  </svg>
+                </i>
+              </button>
+            )}
+          </article>
+        ))}
+      </div>
+
       {bio && (
         <div
+          className="bio"
           role="dialog"
           aria-modal="true"
           aria-label={bio.name}
           onClick={(e) => { if (e.target === e.currentTarget) setBio(null); }}
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 120,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 24,
-            background: "rgba(0,0,0,0.86)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-            animation: "filmIn 0.4s ease both",
-          }}
         >
-          <div
-            style={{
-              position: "relative",
-              display: "grid",
-              gridTemplateColumns: "340px minmax(0,1fr)",
-              width: "min(1080px, 100%)",
-              height: "min(720px, calc(100vh - 48px))",
-              borderRadius: 28,
-              overflow: "hidden",
-              border: "1px solid rgba(255,255,255,0.14)",
-              background: "linear-gradient(165deg,#1B1B1C,#0A0A0A 60%)",
-              boxShadow: "0 40px 160px rgba(0,0,0,0.8)",
-              animation: "filmBox 0.7s cubic-bezier(.2,.8,.2,1) both",
-            }}
-          >
-            {/* Close */}
-            <button
-              aria-label="Cerrar perfil"
-              onClick={() => setBio(null)}
-              style={{
-                position: "absolute",
-                top: 18,
-                right: 20,
-                zIndex: 3,
-                display: "inline-flex",
-                width: 48,
-                height: 48,
-                borderRadius: "50%",
-                alignItems: "center",
-                justifyContent: "center",
-                border: "1px solid rgba(255,255,255,0.2)",
-                background: "rgba(10,10,10,0.7)",
-                backdropFilter: "blur(8px)",
-                WebkitBackdropFilter: "blur(8px)",
-                color: "#fff",
-                cursor: "pointer",
-              }}
-            >
+          <div className="bio-box">
+            <button type="button" className="mclose" aria-label="Cerrar perfil" onClick={() => setBio(null)}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                <path d="M5 5l14 14" />
-                <path d="M19 5L5 19" />
+                <path d="M5 5l14 14" /><path d="M19 5L5 19" />
               </svg>
             </button>
-
-            {/* Photo */}
-            <div style={{ position: "relative", background: "transparent" }}>
-              <Image
-                src={bio.img}
-                alt={bio.name}
-                fill
-                sizes="340px"
-                style={{
-                  objectFit: "cover",
-                  objectPosition: "50% 18%",
-                  filter: "grayscale(1) contrast(1.05)",
-                  WebkitMaskImage: "linear-gradient(90deg, #000 42%, transparent 98%)",
-                  maskImage: "linear-gradient(90deg, #000 42%, transparent 98%)",
-                }}
-              />
+            <div className="bio-ph">
+              <img src={bio.img} alt={bio.name} />
             </div>
-
-            {/* Text */}
-            <div style={{ overflow: "auto", padding: "52px 48px 48px", overscrollBehavior: "contain" }}>
-              <p
-                style={{
-                  fontFamily: "var(--font-questrial), monospace",
-                  fontSize: 11,
-                  letterSpacing: "0.22em",
-                  textTransform: "uppercase",
-                  color: "#A7A9AC",
-                  paddingRight: 56,
-                  lineHeight: 1.5,
-                }}
-              >
-                {bio.role}
-              </p>
-              <h3
-                style={{
-                  margin: "14px 0 26px",
-                  fontSize: "clamp(28px, 3vw, 40px)",
-                  fontWeight: 300,
-                  letterSpacing: "-0.02em",
-                  lineHeight: 1.1,
-                }}
-              >
-                {bio.name}
-              </h3>
-
+            <div className="bio-tx">
+              <p className="eyebrow">{bio.role}</p>
+              <h3>{bio.name}</h3>
               {bio.paras.map((p, i) => (
-                <p
-                  key={i}
-                  style={{
-                    marginBottom: 16,
-                    fontSize: 15,
-                    lineHeight: 1.72,
-                    color: "#C8C9CB",
-                  }}
-                >
-                  {p.t}
-                </p>
+                <p key={i} className="bio-p">{p.t}</p>
               ))}
-
-              <blockquote
-                style={{
-                  margin: "28px 0 0",
-                  padding: "22px 26px",
-                  borderRadius: 22,
-                  border: "1px solid rgba(255,255,255,0.16)",
-                  background: "rgba(255,255,255,0.045)",
-                  fontFamily: "var(--font-quicksand), sans-serif",
-                  fontSize: 18,
-                  lineHeight: 1.5,
-                  color: "#fff",
-                }}
-              >
-                <span
-                  style={{
-                    display: "block",
-                    marginBottom: 8,
-                    fontFamily: "var(--font-questrial), monospace",
-                    fontSize: 11,
-                    letterSpacing: "0.22em",
-                    textTransform: "uppercase",
-                    color: "#A7A9AC",
-                  }}
-                >
-                  Visión
-                </span>
-                {bio.vision}
-              </blockquote>
+              {bio.vision && (
+                <blockquote className="bio-v">
+                  <span>Visión</span>
+                  {bio.vision}
+                </blockquote>
+              )}
             </div>
           </div>
         </div>
       )}
-
-      <style>{`
-        @media (max-width: 1000px) {
-          #equipo [style*="grid-template-columns: repeat(3"] {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-          }
-        }
-        @media (max-width: 760px) {
-          #equipo [style*="grid-template-columns: repeat(3"] {
-            grid-template-columns: 1fr !important;
-          }
-          [role="dialog"] [style*="grid-template-columns: 340px"] {
-            grid-template-columns: minmax(0,1fr) !important;
-            grid-template-rows: 240px minmax(0,1fr);
-            height: 100% !important;
-            width: 100% !important;
-            border-radius: 0 !important;
-            border: 0 !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }
