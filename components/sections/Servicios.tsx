@@ -1,349 +1,126 @@
+"use client";
+
 import Link from "next/link";
 
-const SERVICIOS = [
-  {
-    id: "SCORE",
-    label: "Diagnóstico",
-    headline: "El diagnóstico del momentum de tu proyecto",
-    desc: "Madurez, Potencial y Confianza. La puerta de entrada a Music Finance Pro.",
-    tag: "Puerta de entrada",
-    img: "/concert-lights.webp",
-    color: "#A7A9AC",
-  },
-  {
-    id: "TRACE",
-    label: "Gestión financiera",
-    headline: "Exactitud, Orden y Trazabilidad",
-    desc: "Agente administrativo híbrido de gestión financiera para artistas, empresas y eventos musicales.",
-    tag: "Gestión diaria",
-    img: "/console.webp",
-    color: "#BCBEC0",
-  },
-  {
-    id: "VALUE",
-    label: "Valoración",
-    headline: "Valoración financiera con metodología propia",
-    desc: "Proyectos, empresas, catálogos y eventos musicales valorados con rigor financiero.",
-    tag: "Metodología propia",
-    img: "/studio.webp",
-    color: "#D1D3D4",
-  },
-  {
-    id: "CAPITAL",
-    label: "Inversión",
-    headline: "Invertimos, estructuramos o conectamos capital",
-    desc: "Para oportunidades musicales que superan nuestro proceso de valoración.",
-    tag: "Capital estratégico",
-    img: "/band-studio.webp",
-    color: "#E6E7E8",
-  },
-];
+const onTiltMove = (e: React.MouseEvent<HTMLElement>) => {
+  const el = e.currentTarget as HTMLElement;
+  const r = el.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width;
+  const y = (e.clientY - r.top) / r.height;
+  el.style.setProperty("--rx", `${((0.5 - y) * 10).toFixed(2)}deg`);
+  el.style.setProperty("--ry", `${((x - 0.5) * 12).toFixed(2)}deg`);
+  el.style.setProperty("--mx", `${(x * 100).toFixed(1)}%`);
+  el.style.setProperty("--my", `${(y * 100).toFixed(1)}%`);
+};
 
-const CLIP_PATHS = [
-  "ellipse(80% 100% at 50% 0%)",
-  "polygon(0 0, 100% 0, 100% 74%, 0 100%)",
-  "polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%)",
-  "polygon(0 0, 100% 0, 100% 100%, 0 74%)",
-];
+const onTiltLeave = (e: React.MouseEvent<HTMLElement>) => {
+  const el = e.currentTarget as HTMLElement;
+  el.style.setProperty("--rx", "0deg");
+  el.style.setProperty("--ry", "0deg");
+};
 
 export default function Servicios() {
   return (
     <section
       id="servicios"
-      style={{
-        position: "relative",
-        padding: "clamp(72px, 10vw, 140px) clamp(20px, 4vw, 48px)",
-        background: "#050505",
-      }}
+      className="sec persp"
+      style={{ maxWidth: 1320, margin: "0 auto", padding: "110px 24px 60px" }}
     >
-      <div style={{ maxWidth: 1320, margin: "0 auto" }}>
-        {/* Header */}
-        <div className="rv" style={{ marginBottom: "clamp(48px, 6vw, 80px)" }}>
-          <p
-            style={{
-              fontFamily: "var(--font-questrial), monospace",
-              fontSize: 12,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              color: "#B5B7BA",
-              marginBottom: 16,
-            }}
-          >
-            Suite de servicios
-          </p>
-          <h2
-            style={{
-              fontSize: "clamp(34px, 4.2vw, 58px)",
-              fontWeight: 300,
-              lineHeight: 1.1,
-              letterSpacing: "-0.025em",
-              maxWidth: 600,
-            }}
-          >
-            Servicios financieros para la industria musical
-          </h2>
-          <p
-            style={{
-              marginTop: 16,
-              fontSize: 18,
-              color: "#C8C9CB",
-              lineHeight: 1.55,
-              maxWidth: 500,
-            }}
-          >
-            Diagnóstico, gestión, valoración y estructuración para artistas, empresas, catálogos y eventos.
-          </p>
-        </div>
-
-        {/* Service cards grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: 18,
-          }}
-        >
-          {SERVICIOS.map((s, i) => (
-            <article
-              key={s.id}
-              className="rv"
-              style={{
-                position: "relative",
-                borderRadius: 28,
-                border: "1px solid rgba(255,255,255,0.08)",
-                background: "linear-gradient(180deg,#151515 0%,#0A0A0A 100%)",
-                overflow: "hidden",
-                display: "flex",
-                flexDirection: "column",
-                gap: 18,
-                padding: 24,
-                minHeight: 440,
-                transition: "border-color 0.4s, box-shadow 0.4s",
-              }}
-            >
-              {/* Image */}
-              <div
-                style={{
-                  position: "relative",
-                  height: 190,
-                  margin: "-24px -24px 4px",
-                  overflow: "hidden",
-                  clipPath: CLIP_PATHS[i],
-                }}
-              >
-                <img
-                  src={s.img}
-                  alt=""
-                  aria-hidden="true"
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    transform: "scale(1.14)",
-                    filter: "contrast(1.05) brightness(0.82)",
-                  }}
-                />
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: `linear-gradient(135deg, color-mix(in srgb, ${s.color} 60%, transparent), transparent 55%)`,
-                    mixBlendMode: "color",
-                  }}
-                />
-              </div>
-
-              {/* Content */}
-              <span
-                style={{
-                  fontFamily: "var(--font-questrial), monospace",
-                  fontSize: 11,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: "#6D6E71",
-                }}
-              >
-                {s.label}
-              </span>
-
-              <h3
-                style={{
-                  fontFamily: "var(--font-quicksand), sans-serif",
-                  fontSize: "clamp(22px, 2.5vw, 28px)",
-                  fontWeight: 600,
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.02em",
-                  color: "#fff",
-                }}
-              >
-                {s.id}
-              </h3>
-
-              <p style={{ fontSize: 15, lineHeight: 1.55, color: "#B5B7BA", flex: 1 }}>
-                {s.desc}
-              </p>
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  paddingTop: 16,
-                  borderTop: "1px solid rgba(255,255,255,0.1)",
-                }}
-              >
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    minHeight: 32,
-                    padding: "0 14px",
-                    borderRadius: 999,
-                    border: "1px solid rgba(255,255,255,0.14)",
-                    background: "rgba(255,255,255,0.04)",
-                    fontSize: 12.5,
-                    color: "#E6E7E8",
-                  }}
-                >
-                  {s.tag}
-                </span>
-                {s.id === "SCORE" && (
-                  <Link
-                    href="#contacto"
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: 44,
-                      height: 44,
-                      borderRadius: "50%",
-                      background: "#fff",
-                      color: "#000",
-                      textDecoration: "none",
-                      transition: "transform 0.35s",
-                    }}
-                    aria-label="Hacer mi SCORE"
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                      <path d="M7 17L17 7" />
-                      <path d="M8 7h9v9" />
-                    </svg>
-                  </Link>
-                )}
-              </div>
-            </article>
-          ))}
-        </div>
-
-        {/* Cómo funciona accordion */}
-        <ComoFunciona />
-      </div>
-    </section>
-  );
-}
-
-const STEPS = [
-  {
-    n: "01",
-    title: "Cuéntanos quién eres",
-    meta: "Menos de 2 min",
-    text: "Completa un formulario breve con tus datos y tus enlaces. Te contactamos en un máximo de 24 horas hábiles para contarte los siguientes pasos.",
-  },
-  {
-    n: "02",
-    title: "Vive tu SCORE",
-    meta: "30–45 min",
-    text: "La Conversación SCORE: cuentas tu proyecto hablando, escribiendo, eligiendo entre opciones o combinándolas. Guardas y continúas cuando quieras, sin documentos que adjuntar.",
-  },
-  {
-    n: "03",
-    title: "Analizamos tu momentum",
-    meta: "Revisión humana",
-    text: "Contrastamos lo que declaras con datos de la industria musical. El Motor SCORE construye tus lecturas, THE CORTEX las interpreta en contexto y una persona revisa y aprueba antes de entregar.",
-  },
-  {
-    n: "04",
-    title: "Recibe la fotografía de tu momentum",
-    meta: "7 días hábiles",
-    text: "Recibe un reporte del más alto nivel corporativo en el que se describen en detalle el momentum, alcance, oportunidades, riesgos, próximos pasos, análisis y conclusiones de nuestra directiva.",
-  },
-];
-
-function ComoFunciona() {
-  return (
-    <div style={{ marginTop: "clamp(72px, 8vw, 120px)" }}>
-      <div className="rv" style={{ marginBottom: 40 }}>
-        <p
-          style={{
-            fontFamily: "var(--font-questrial), monospace",
-            fontSize: 12,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "#B5B7BA",
-            marginBottom: 16,
-          }}
-        >
-          Cómo funciona
-        </p>
-        <h2
-          style={{
-            fontSize: "clamp(34px, 4.2vw, 58px)",
-            fontWeight: 300,
-            lineHeight: 1.1,
-            letterSpacing: "-0.025em",
-          }}
-        >
-          Una metodología de Music Finance Pro
+      <div
+        className="rv"
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+          gap: 24,
+        }}
+      >
+        <h2 className="h2" style={{ maxWidth: 700 }}>
+          Una Suite de servicios financieros y de inversi&oacute;n{" "}
+          <span className="grad">para cada momento.</span>
         </h2>
+        <p className="lead" style={{ maxWidth: 430 }}>
+          SCORE es el punto de partida y puerta de entrada para aplicar a otros servicios de nuestra Suite.
+        </p>
       </div>
 
-      <div>
-        {STEPS.map((step, i) => (
-          <div
-            key={step.n}
-            className="rv"
-            style={{
-              borderTop: i === 0 ? "none" : "1px solid rgba(255,255,255,0.09)",
-              padding: "28px 0",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "flex-start", gap: 20 }}>
-              <span
-                style={{
-                  fontFamily: "var(--font-questrial), monospace",
-                  fontSize: 13,
-                  color: "#939598",
-                  width: 26,
-                  flexShrink: 0,
-                  paddingTop: 4,
-                }}
-              >
-                {step.n}
-              </span>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, marginBottom: 12 }}>
-                  <h3
-                    style={{
-                      fontSize: "clamp(18px, 2vw, 23px)",
-                      fontWeight: 300,
-                      color: "#F5F5F5",
-                    }}
-                  >
-                    {step.title}
-                  </h3>
-                  <span style={{ fontSize: 12.5, color: "#C8C9CB", whiteSpace: "nowrap", flexShrink: 0 }}>
-                    {step.meta}
-                  </span>
-                </div>
-                <p style={{ fontSize: 15, lineHeight: 1.65, color: "#A7A9AC", maxWidth: 640 }}>
-                  {step.text}
-                </p>
-              </div>
+      <div
+        style={{
+          marginTop: 64,
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr)",
+          gridTemplateRows: "auto auto",
+          gap: 20,
+        }}
+      >
+        <article
+          className="card hi tilt rv"
+          onMouseMove={onTiltMove}
+          onMouseLeave={onTiltLeave}
+          style={{ gridRow: "span 2", minHeight: 560, padding: 32, display: "flex", flexDirection: "column", justifyContent: "space-between" }}
+        >
+          <div className="blob" aria-hidden="true" style={{ right: -180, bottom: -160 }} />
+          <div style={{ position: "relative", display: "flex", justifyContent: "space-between", fontSize: 14, color: "#E6E7E8" }}>
+            <span>Entender</span><span className="mono">01</span>
+          </div>
+          <div style={{ position: "relative", display: "flex", justifyContent: "center" }} aria-hidden="true">
+            <div className="ost" style={{ width: 200, height: 200 }}>
+              <div className="oring r2"><i /></div>
+              <div className="orb" />
+              <div className="oring r1"><i /></div>
+              <div className="oring r3" />
             </div>
           </div>
-        ))}
+          <div style={{ position: "relative" }}>
+            <h3 style={{ fontSize: "clamp(34px, 3.4vw, 46px)", fontWeight: 500, letterSpacing: ".08em" }}>SCORE</h3>
+            <p style={{ marginTop: 14, fontSize: 16, lineHeight: 1.6, color: "#F0F0F0", maxWidth: 440 }}>
+              El diagn&oacute;stico del momentum de tu proyecto: madurez, potencial y confianza. La puerta de entrada a Music Finance Pro.
+            </p>
+            <div style={{ marginTop: 26, display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
+              <span style={{ fontSize: 14, color: "#E6E7E8" }}>
+                Puerta de entrada<span style={{ margin: "0 12px", color: "var(--b)" }}>&bull;</span>4 familias
+              </span>
+              <Link className="btn-w" href="#form">
+                Hacer mi SCORE
+                <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg></span>
+              </Link>
+            </div>
+          </div>
+        </article>
+
+        <article className="card tilt rv" onMouseMove={onTiltMove} onMouseLeave={onTiltLeave} style={{ minHeight: 270, padding: 26, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, color: "#B5B7BA" }}><span>Gestionar</span><span className="mono">02</span></div>
+          <div>
+            <h3 style={{ fontSize: 28, fontWeight: 500, letterSpacing: ".08em" }}>TRACE</h3>
+            <p style={{ marginTop: 10, fontSize: 14, color: "#C8C9CB", lineHeight: 1.55 }}>Es un agente administrativo h&iacute;brido de gesti&oacute;n financiera que garantiza Exactitud, Orden y Trazabilidad en la gesti&oacute;n diaria de artistas, empresas y eventos musicales.</p>
+          </div>
+          <Link className="lk" href="#form">Hablar con el equipo<span className="arw" style={{ width: 36, height: 36 }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg></span></Link>
+        </article>
+
+        <article className="card tilt rv" onMouseMove={onTiltMove} onMouseLeave={onTiltLeave} style={{ minHeight: 270, padding: 26, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, color: "#B5B7BA" }}><span>Valorar</span><span className="mono">03</span></div>
+          <div>
+            <h3 style={{ fontSize: 28, fontWeight: 500, letterSpacing: ".08em" }}>VALUE</h3>
+            <p style={{ marginTop: 10, fontSize: 14, color: "#C8C9CB", lineHeight: 1.55 }}>Valoraci&oacute;n financiera de proyectos, empresas, cat&aacute;logos y eventos musicales, con metodolog&iacute;a propia.</p>
+          </div>
+          <Link className="lk" href="#form">Hablar con el equipo<span className="arw" style={{ width: 36, height: 36 }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg></span></Link>
+        </article>
+
+        <article className="card tilt rv" onMouseMove={onTiltMove} onMouseLeave={onTiltLeave} style={{ gridColumn: "span 2", minHeight: 270, padding: 26, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <div className="radar" aria-hidden="true">
+            <u style={{ left: "30%", top: "40%" }} />
+            <u style={{ left: "62%", top: "22%", animationDelay: "-1.2s" }} />
+            <u style={{ left: "46%", top: "70%", animationDelay: "-2.4s" }} />
+          </div>
+          <div style={{ position: "relative", display: "flex", justifyContent: "space-between", fontSize: 14, color: "#B5B7BA" }}><span>Estructurar</span><span className="mono">04</span></div>
+          <div style={{ position: "relative" }}>
+            <h3 style={{ fontSize: 28, fontWeight: 500, letterSpacing: ".08em" }}>CAPITAL</h3>
+            <p style={{ marginTop: 10, fontSize: 14, color: "#C8C9CB", lineHeight: 1.55, maxWidth: 420 }}>Invertimos, estructuramos o conectamos capital para oportunidades musicales. <span className="tbd">POR DEFINIR</span></p>
+          </div>
+          <Link className="lk" href="#form" style={{ maxWidth: 420 }}>Hablar con el equipo<span className="arw" style={{ width: 36, height: 36 }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg></span></Link>
+        </article>
       </div>
-    </div>
+    </section>
   );
 }
