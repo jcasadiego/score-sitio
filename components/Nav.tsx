@@ -5,10 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 const NAV_LINKS = [
+  { href: "#metodologia", label: "SCORE" },
   { href: "#servicios", label: "Servicios" },
   { href: "#nosotros", label: "Nosotros" },
-  { href: "#preguntas", label: "Preguntas" },
-  { href: "#contacto", label: "Contacto" },
+  { href: "#form", label: "Contacto" },
 ];
 
 export default function Nav() {
@@ -40,8 +40,8 @@ export default function Nav() {
             src="/logo-full-neg.png"
             alt="Music Finance Pro · SCORE"
             width={140}
-            height={32}
-            style={{ height: 32, width: "auto" }}
+            height={50}
+            style={{ height: 50, width: "auto" }}
             priority
           />
         </Link>
@@ -81,7 +81,7 @@ export default function Nav() {
         </nav>
 
         <Link
-          href="#contacto"
+          href="#form"
           className="btn-primary hidden-mobile"
           style={{
             minHeight: 42,
@@ -165,7 +165,7 @@ export default function Nav() {
           </button>
 
           <nav style={{ display: "flex", flexDirection: "column" }}>
-            {[...NAV_LINKS, { href: "#contacto", label: "Hacer mi SCORE" }].map((link, i) => (
+            {[...NAV_LINKS, { href: "#form", label: "Hacer mi SCORE" }].map((link, i) => (
               <Link
                 key={link.href + i}
                 href={link.href}

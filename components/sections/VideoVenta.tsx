@@ -7,7 +7,7 @@ export default function VideoVenta() {
 
   return (
     <section
-      id="video-venta"
+      id="metodologia"
       style={{
         position: "relative",
         padding: "clamp(72px, 10vw, 140px) clamp(20px, 4vw, 48px)",
