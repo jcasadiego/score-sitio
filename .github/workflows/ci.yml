@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+
+permissions:
+  contents: read
+
+jobs:
+  # El nombre del job es el check requerido de `develop` y `main`: no cambiarlo.
+  lint-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      # Las actions van fijadas por SHA (Dependabot las actualiza).
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          # Node 20 ya no recibe parches de seguridad.
+          node-version: "22"
+          cache: "npm"
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Auditar dependencias (alta o crítica)
+        run: npm audit --audit-level=high
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build (exporta el sitio estático e incluye el chequeo de tipos)
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: "https://api.invalid"
