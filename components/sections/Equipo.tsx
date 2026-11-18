@@ -75,27 +75,12 @@ export default function Equipo() {
           }}
         >
           <div style={{ maxWidth: 470 }}>
-            <p
-              style={{
-                fontFamily: "var(--font-questrial), monospace",
-                fontSize: 12,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "#B5B7BA",
-                marginBottom: 16,
-              }}
-            >
+            <p className="eyebrow" style={{ marginBottom: 16 }}>
               Nuestro equipo directivo
             </p>
-            <h2
-              style={{
-                fontSize: "clamp(34px, 4.2vw, 58px)",
-                fontWeight: 300,
-                lineHeight: 1.1,
-                letterSpacing: "-0.025em",
-              }}
-            >
-              Las personas detrás de SCORE
+            <h2 className="h2">
+              Inteligencia Financiera con{" "}
+              <span className="grad">Sensibilidad Cultural.</span>
             </h2>
           </div>
         </div>

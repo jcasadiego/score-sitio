@@ -28,30 +28,11 @@ export default function Aliados() {
         }}
       >
         <p
-          className="rv"
-          style={{
-            fontFamily: "var(--font-questrial), monospace",
-            fontSize: 12,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "#B5B7BA",
-            marginBottom: 16,
-          }}
+          className="rv eyebrow"
+          style={{ textAlign: "center" }}
         >
-          Aliados
+          Nuestros aliados estratégicos
         </p>
-        <h2
-          className="rv"
-          style={{
-            fontSize: "clamp(34px, 4.2vw, 58px)",
-            fontWeight: 300,
-            lineHeight: 1.1,
-            letterSpacing: "-0.025em",
-            maxWidth: 540,
-          }}
-        >
-          Construyendo el ecosistema juntos
-        </h2>
       </div>
 
       {/* Infinite scroll carousel */}

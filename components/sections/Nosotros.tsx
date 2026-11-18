@@ -11,31 +11,15 @@ export default function Nosotros() {
       <div style={{ maxWidth: 1320, margin: "0 auto" }}>
         {/* Header */}
         <div className="rv" style={{ marginBottom: "clamp(48px, 6vw, 80px)", maxWidth: 720 }}>
-          <p
-            style={{
-              fontFamily: "var(--font-questrial), monospace",
-              fontSize: 12,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              color: "#B5B7BA",
-              marginBottom: 16,
-            }}
-          >
+          <p className="eyebrow" style={{ marginBottom: 16 }}>
             Quién está detrás
           </p>
-          <h2
-            style={{
-              fontSize: "clamp(34px, 4.2vw, 58px)",
-              fontWeight: 300,
-              lineHeight: 1.1,
-              letterSpacing: "-0.025em",
-              marginBottom: 24,
-            }}
-          >
-            Una metodología construida desde adentro de la industria
+          <h2 className="h2" style={{ marginBottom: 24 }}>
+            Finanzas, mercados y criterio para la{" "}
+            <span className="grad">economía de la música.</span>
           </h2>
-          <p style={{ fontSize: 18, color: "#C8C9CB", lineHeight: 1.65, marginBottom: 16 }}>
-            En Music Finance Pro reunimos experiencia en industria musical, economía cultural, finanzas, inversión, tecnología e inteligencia artificial para desarrollar una nueva forma de comprender, diagnosticar y valorar el potencial económico de la música.
+          <p className="lead" style={{ marginBottom: 16 }}>
+            Somos una firma de servicios financieros e inversión especializada en la industria musical.
           </p>
           <p style={{ fontSize: 15, color: "#A7A9AC", lineHeight: 1.65 }}>
             Nuestra estructura integra liderazgo estratégico, capacidades financieras y tecnológicas avanzadas, y una gestión centrada en las personas. La tecnología amplifica nuestra capacidad de análisis; el conocimiento experto aporta contexto, supervisión y responsabilidad.
