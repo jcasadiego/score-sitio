@@ -62,31 +62,11 @@ export default function PorQue() {
           }}
         >
           <div>
-            <p
-              style={{
-                fontFamily: "var(--font-questrial), monospace",
-                fontSize: 12,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "#B5B7BA",
-                marginBottom: 20,
-              }}
-            >
+            <p className="eyebrow" style={{ marginBottom: 20 }}>
               Nuestra filosofía
             </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-quicksand), sans-serif",
-                fontSize: "clamp(34px, 4.2vw, 58px)",
-                fontWeight: 300,
-                lineHeight: 1.1,
-                letterSpacing: "-0.025em",
-                marginBottom: 24,
-              }}
-            >
-              <span style={{ color: "#F5F5F5" }}>VALORAMOS LA MÚSICA.</span>
-              <br />
-              <span style={{ color: "#6D6E71" }}>También es un activo.</span>
+            <h2 className="h2" style={{ marginBottom: 24 }}>
+              Popularidad <span className="grad">no es valor.</span>
             </h2>
 
             <p style={{ fontSize: 18, color: "#C8C9CB", lineHeight: 1.65, marginBottom: 20 }}>
