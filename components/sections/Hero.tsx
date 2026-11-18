@@ -1,6 +1,29 @@
+"use client";
+
 import Link from "next/link";
 
-const EQ_BARS = [0.4, 0.75, 0.55, 0.9, 0.65, 0.3, 0.8, 0.45, 0.7, 0.35, 0.6, 0.85];
+// EQ bars matching the HTML original: 12 bars with specific heights and delays
+const EQ_BARS = [
+  { left: "3%",  height: "55%", delay: "0.00s, 0.00s" },
+  { left: "11%", height: "78%", delay: "0.08s, -0.70s" },
+  { left: "19%", height: "40%", delay: "0.16s, -1.40s" },
+  { left: "27%", height: "62%", delay: "0.24s, -2.10s" },
+  { left: "35%", height: "30%", delay: "0.32s, -2.80s" },
+  { left: "43%", height: "48%", delay: "0.40s, -3.50s" },
+  { left: "51%", height: "85%", delay: "0.48s, -4.20s" },
+  { left: "59%", height: "66%", delay: "0.56s, -4.90s" },
+  { left: "67%", height: "38%", delay: "0.64s, -5.60s" },
+  { left: "75%", height: "72%", delay: "0.72s, -6.30s" },
+  { left: "83%", height: "50%", delay: "0.80s, -7.00s" },
+  { left: "91%", height: "95%", delay: "0.88s, -7.70s" },
+];
+
+const TICKER_WORDS = [
+  "Artistas", "Empresas", "Catálogos", "Eventos",
+  "Momentum", "Madurez", "Potencial", "Confianza",
+  "Artistas", "Empresas", "Catálogos", "Eventos",
+  "Momentum", "Madurez", "Potencial", "Confianza",
+];
 
 export default function Hero() {
   return (
@@ -8,9 +31,9 @@ export default function Hero() {
       id="inicio"
       style={{
         position: "relative",
-        minHeight: "100svh",
+        minHeight: "940px",
         display: "flex",
-        alignItems: "center",
+        flexDirection: "column",
         overflow: "hidden",
         background: "#050505",
         paddingTop: 68,
@@ -19,104 +42,45 @@ export default function Hero() {
       {/* Background gradient */}
       <div
         aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "radial-gradient(900px 640px at 72% 32%, rgba(167,169,172,0.18) 0%, transparent 62%), radial-gradient(620px 420px at 88% 74%, rgba(255,255,255,0.08) 0%, transparent 60%), linear-gradient(180deg,#0C0C0C 0%,#050505 100%)",
-        }}
+        className="hero-bg"
       />
 
       {/* Grid lines */}
       <div
         aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-          backgroundSize: "80px 80px",
-          WebkitMaskImage: "radial-gradient(ellipse 70% 60% at 65% 40%, #000 20%, transparent 75%)",
-          maskImage: "radial-gradient(ellipse 70% 60% at 65% 40%, #000 20%, transparent 75%)",
-        }}
-      />
-
-      {/* Bolt band left */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          top: 0,
-          bottom: 0,
-          left: 0,
-          width: 64,
-          backgroundImage: "url(/brand-bolt-pattern.png)",
-          backgroundSize: "240px auto",
-          backgroundRepeat: "repeat",
-          opacity: 0.16,
-          animation: "boltmove 26s linear infinite",
-          WebkitMaskImage: "linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent)",
-          maskImage: "linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent)",
-          pointerEvents: "none",
-          zIndex: 2,
-        }}
+        className="hero-lines"
       />
 
       {/* Stage photo */}
       <div
         aria-hidden="true"
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: "72%",
-          backgroundImage: "url(/hero-stage.webp)",
-          backgroundSize: "cover",
-          backgroundPosition: "center 35%",
-          opacity: 0.26,
-          WebkitMaskImage: "linear-gradient(0deg, transparent 0%, #000 30%, #000 55%, transparent 100%)",
-          maskImage: "linear-gradient(0deg, transparent 0%, #000 30%, #000 55%, transparent 100%)",
-          pointerEvents: "none",
-        }}
+        className="hero-photo"
       />
 
       {/* EQ bars */}
       <div
         aria-hidden="true"
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: "60%",
-          pointerEvents: "none",
-          WebkitMaskImage: "linear-gradient(0deg, #000 25%, transparent)",
-          maskImage: "linear-gradient(0deg, #000 25%, transparent)",
-        }}
+        className="ebars"
       >
-        {EQ_BARS.map((h, i) => (
+        {EQ_BARS.map((bar, i) => (
           <span
             key={i}
             style={{
-              position: "absolute",
-              bottom: 0,
-              left: `${(i / EQ_BARS.length) * 100}%`,
-              width: `${100 / EQ_BARS.length - 0.4}%`,
-              height: `${h * 100}%`,
-              border: "1px solid rgba(255,255,255,0.3)",
-              borderBottom: 0,
-              transformOrigin: "bottom",
-              animation: `ebar 1.8s cubic-bezier(.2,.8,.2,1) ${i * 0.1}s both, ebob 5s ease-in-out ${i * 0.3}s infinite alternate`,
+              left: bar.left,
+              height: bar.height,
+              animationDelay: bar.delay,
             }}
           />
         ))}
       </div>
 
-      {/* Canvas placeholder — 3D particle brain (TODO: implementar animación de partículas) */}
-      {/* TODO: convertir _brain() canvas a un componente React con useRef + useEffect */}
+      {/* Bolt band left */}
+      <div
+        aria-hidden="true"
+        className="boltband"
+      />
 
-      {/* Content */}
+      {/* Content wrapper */}
       <div
         style={{
           position: "relative",
@@ -124,106 +88,125 @@ export default function Hero() {
           width: "100%",
           maxWidth: 1320,
           margin: "0 auto",
-          padding: "80px clamp(20px, 4vw, 48px) clamp(80px, 12vw, 160px)",
+          padding: "80px 24px clamp(80px, 12vw, 160px)",
         }}
       >
-        {/* Eyebrow */}
-        <p
-          style={{
-            fontFamily: "var(--font-questrial), monospace",
-            fontSize: 12,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "#B5B7BA",
-            marginBottom: 24,
-            animation: "rise 1.1s cubic-bezier(.2,.8,.2,1) both",
-          }}
-        >
-          Music Finance Pro presenta SCORE
-        </p>
+        {/* Hero grid */}
+        <div className="hero-grid" style={{ position: "relative" }}>
+          {/* Eyebrow */}
+          <p
+            className="in1 eyebrow"
+            style={{ marginBottom: 24 }}
+          >
+            Music Finance Pro presenta SCORE
+          </p>
 
-        {/* Main headline */}
-        <h1
-          style={{
-            fontSize: "clamp(42px, 7vw, 96px)",
-            fontWeight: 300,
-            lineHeight: 1.05,
-            letterSpacing: "-0.025em",
-            maxWidth: 740,
-            marginBottom: 24,
-            animation: "rise 1.1s cubic-bezier(.2,.8,.2,1) 0.08s both",
-          }}
-        >
-          Para artistas, empresas,{" "}
-          <span className="grad-text">catálogos y eventos</span>
-        </h1>
+          {/* Main headline */}
+          <h1
+            className="in2"
+            style={{
+              marginTop: 28,
+              fontSize: "clamp(36px, 4.2vw, 60px)",
+              fontWeight: 300,
+              lineHeight: 1.08,
+              letterSpacing: "-0.035em",
+            }}
+          >
+            Entiende dónde está tu proyecto.{" "}
+            <span
+              className="grad"
+              style={{ fontWeight: 400 }}
+            >
+              Descubre hasta dónde puede llegar.
+            </span>
+          </h1>
 
-        {/* Subheadline */}
-        <p
-          style={{
-            fontSize: "clamp(16px, 2vw, 20px)",
-            color: "#C8C9CB",
-            lineHeight: 1.55,
-            maxWidth: 520,
-            marginBottom: 48,
-            animation: "rise 1.1s cubic-bezier(.2,.8,.2,1) 0.18s both",
-          }}
-        >
-          Entiende dónde está tu proyecto.{" "}
-          <span style={{ color: "#F5F5F5" }}>Descubre hasta dónde puede llegar.</span>
-        </p>
+          {/* Subheadline */}
+          <p
+            className="in3"
+            style={{
+              marginTop: 28,
+              maxWidth: 600,
+              fontSize: 18,
+              lineHeight: 1.65,
+              color: "#C8C9CB",
+            }}
+          >
+            SCORE es el diagnóstico que mide el potencial, la madurez y la confianza de artistas, empresas, catálogos y eventos. SCORE es tu puerta de entrada a nuestra Suite de Servicios Financieros e inversión enfocados en la industria musical.
+          </p>
 
-        {/* CTA row */}
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 16,
-            animation: "rise 1.1s cubic-bezier(.2,.8,.2,1) 0.3s both",
-          }}
-        >
-          <Link href="#contacto" className="btn-primary">
-            Hacer mi SCORE
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-              <path d="M7 17L17 7" />
-              <path d="M8 7h9v9" />
-            </svg>
-          </Link>
-          <Link href="#servicios" className="btn-ghost">
-            Ver cómo funciona
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </Link>
+          {/* CTA row */}
+          <div
+            className="in4"
+            style={{
+              marginTop: 40,
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              gap: 14,
+            }}
+          >
+            <Link href="#form" className="btn-p">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                <path d="M7 17L17 7" />
+                <path d="M8 7h9v9" />
+              </svg>
+              Hacer mi SCORE
+            </Link>
+            <Link href="#metodologia" className="btn-g">
+              Ver cómo funciona
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </Link>
+          </div>
+
+          {/* Stats */}
+          <div
+            className="in5"
+            style={{
+              marginTop: 56,
+              display: "flex",
+              gap: 32,
+              alignItems: "center",
+            }}
+          >
+            <div>
+              <div style={{ fontSize: 30, fontWeight: 300 }}>4 familias</div>
+              <div style={{ marginTop: 6, fontSize: 13.5, color: "#A7A9AC" }}>Artistas · Empresas · Catálogos · Eventos</div>
+            </div>
+            <div
+              style={{
+                width: 1,
+                height: 56,
+                background: "linear-gradient(transparent, rgba(255,255,255,.35), transparent)",
+              }}
+            />
+            <div>
+              <div style={{ fontSize: 30, fontWeight: 300 }}>3 lecturas</div>
+              <div style={{ marginTop: 6, fontSize: 13.5, color: "#A7A9AC" }}>Madurez · Potencial · Confianza</div>
+            </div>
+          </div>
         </div>
 
         {/* Ticker */}
         <div
           aria-hidden="true"
-          style={{
-            overflow: "hidden",
-            marginTop: "clamp(60px, 10vw, 120px)",
-            WebkitMaskImage: "linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent)",
-            maskImage: "linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent)",
-          }}
+          className="amq"
+          style={{ marginTop: "clamp(60px, 10vw, 120px)" }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 56,
-              width: "max-content",
-              animation: "amq 40s linear infinite",
-              fontFamily: "var(--font-quicksand), sans-serif",
-              fontSize: 30,
-              fontWeight: 300,
-              color: "#D1D3D4",
-            }}
-          >
-            {["Artistas", "Empresas", "Catálogos", "Eventos", "Momentum", "Madurez", "Potencial", "Confianza", "Artistas", "Empresas", "Catálogos", "Eventos", "Momentum", "Madurez", "Potencial", "Confianza"].map((word, i) => (
-              <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 56, whiteSpace: "nowrap" }}>
-                {i % 4 === 0 ? <em style={{ display: "block", width: 10, height: 10, transform: "rotate(45deg)", background: "linear-gradient(135deg, #A7A9AC, #fff)", flexShrink: 0 }} /> : null}
-                <span style={i % 2 === 0 ? {} : { color: "transparent", WebkitTextStroke: "1px rgba(255,255,255,0.4)" }}>{word}</span>
+          <div className="amq-track">
+            {TICKER_WORDS.map((word, i) => (
+              <span
+                key={i}
+                style={{ display: "inline-flex", alignItems: "center", gap: 56, whiteSpace: "nowrap" }}
+              >
+                {i % 4 === 0 && (
+                  <em />
+                )}
+                <span className={i % 2 !== 0 ? "o" : ""}>
+                  {word}
+                </span>
               </span>
             ))}
           </div>
@@ -233,6 +216,15 @@ export default function Hero() {
       <style>{`
         @keyframes ebar { from { transform: scaleY(0) } }
         @keyframes ebob { 0% { scale: 1 1 } 100% { scale: 1 .8 } }
+        .ebars span {
+          position: absolute;
+          bottom: 0;
+          width: 3.4%;
+          border: 1px solid rgba(255,255,255,.3);
+          border-bottom: 0;
+          transform-origin: bottom;
+          animation: ebar 1.8s cubic-bezier(.2,.8,.2,1) both, ebob 5s ease-in-out infinite alternate;
+        }
       `}</style>
     </section>
   );
