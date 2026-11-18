@@ -4,15 +4,9 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const NAV_LINKS = [
-  { href: "#metodologia", label: "SCORE" },
-  { href: "#servicios", label: "Servicios" },
-  { href: "#nosotros", label: "Nosotros" },
-  { href: "#form", label: "Contacto" },
-];
-
 export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [lang, setLang] = useState<"es" | "en">("es");
 
   return (
     <>
@@ -46,76 +40,88 @@ export default function Nav() {
           />
         </Link>
 
+        {/* Pill nav container — version-c style */}
         <nav
           aria-label="Navegación principal"
-          style={{ display: "flex", alignItems: "center", gap: 4 }}
+          style={{
+            display: "flex",
+            gap: 4,
+            flexWrap: "wrap",
+            padding: 5,
+            borderRadius: 999,
+            background: "rgba(255,255,255,.035)",
+            border: "1px solid rgba(255,255,255,.08)",
+            backdropFilter: "blur(14px)",
+          }}
           className="hidden-mobile"
         >
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                minHeight: 44,
-                padding: "0 18px",
-                borderRadius: 999,
-                color: "#A7A9AC",
-                textDecoration: "none",
-                fontSize: 14,
-                transition: "color 0.25s, background 0.25s",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = "#fff";
-                (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.06)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = "#A7A9AC";
-                (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
-              }}
-            >
-              {link.label}
-            </Link>
-          ))}
+          <Link href="#metodologia" className="nl on">SCORE</Link>
+          <Link href="#servicios" className="nl">Servicios</Link>
+          <Link href="#nosotros" className="nl">Nosotros</Link>
+          <Link href="#form" className="nl">Contacto</Link>
         </nav>
 
-        <Link
-          href="#form"
-          className="btn-primary hidden-mobile"
-          style={{
-            minHeight: 42,
-            padding: "0 20px",
-            fontSize: 14,
-          }}
-        >
-          Hacer mi SCORE
-        </Link>
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          {/* ES/EN language toggle */}
+          <div
+            className="seg hidden-mobile"
+            role="group"
+            aria-label="Idioma"
+          >
+            <button
+              type="button"
+              className={lang === "es" ? "on" : ""}
+              onClick={() => setLang("es")}
+              aria-pressed={lang === "es"}
+            >
+              ES
+            </button>
+            <button
+              type="button"
+              className={lang === "en" ? "on" : ""}
+              onClick={() => setLang("en")}
+              aria-pressed={lang === "en"}
+            >
+              EN
+            </button>
+          </div>
 
-        <button
-          aria-label="Abrir menú"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen(true)}
-          style={{
-            display: "none",
-            position: "relative",
-            flexShrink: 0,
-            width: 44,
-            height: 44,
-            borderRadius: "50%",
-            border: "1px solid rgba(255,255,255,0.18)",
-            background: "rgba(255,255,255,0.06)",
-            cursor: "pointer",
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column" as const,
-            gap: 6,
-          }}
-          className="show-mobile"
-        >
-          <span style={{ display: "block", width: 18, height: 1.5, borderRadius: 2, background: "#fff" }} />
-          <span style={{ display: "block", width: 18, height: 1.5, borderRadius: 2, background: "#fff" }} />
-        </button>
+          {/* CTA button */}
+          <Link
+            href="#form"
+            className="btn-p hidden-mobile"
+            style={{ minHeight: 46, padding: "0 22px", fontSize: 14 }}
+          >
+            Hacer mi SCORE
+          </Link>
+
+          {/* Mobile hamburger */}
+          <button
+            type="button"
+            aria-label="Abrir menú"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(true)}
+            style={{
+              display: "none",
+              position: "relative",
+              flexShrink: 0,
+              width: 44,
+              height: 44,
+              borderRadius: "50%",
+              border: "1px solid rgba(255,255,255,0.18)",
+              background: "rgba(255,255,255,0.06)",
+              cursor: "pointer",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column" as const,
+              gap: 6,
+            }}
+            className="show-mobile"
+          >
+            <span style={{ display: "block", width: 18, height: 1.5, borderRadius: 2, background: "#fff" }} />
+            <span style={{ display: "block", width: 18, height: 1.5, borderRadius: 2, background: "#fff" }} />
+          </button>
+        </div>
       </header>
 
       {menuOpen && (
@@ -140,6 +146,7 @@ export default function Nav() {
           }}
         >
           <button
+            type="button"
             aria-label="Cerrar menú"
             onClick={() => setMenuOpen(false)}
             style={{
@@ -165,7 +172,13 @@ export default function Nav() {
           </button>
 
           <nav style={{ display: "flex", flexDirection: "column" }}>
-            {[...NAV_LINKS, { href: "#form", label: "Hacer mi SCORE" }].map((link, i) => (
+            {[
+              { href: "#metodologia", label: "SCORE" },
+              { href: "#servicios", label: "Servicios" },
+              { href: "#nosotros", label: "Nosotros" },
+              { href: "#form", label: "Contacto" },
+              { href: "#form", label: "Hacer mi SCORE" },
+            ].map((link, i) => (
               <Link
                 key={link.href + i}
                 href={link.href}
