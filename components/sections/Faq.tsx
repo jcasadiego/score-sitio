@@ -121,7 +121,7 @@ export default function Faq() {
 
   return (
     <section
-      id="preguntas"
+      id="faq"
       style={{
         position: "relative",
         padding: "clamp(72px, 10vw, 140px) clamp(20px, 4vw, 48px)",
@@ -131,7 +131,7 @@ export default function Faq() {
     >
       {/* Background image */}
       <img
-        src="/music-video.webp"
+        src="/crowd-hands.webp"
         alt=""
         aria-hidden="true"
         style={{
