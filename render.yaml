@@ -33,10 +33,11 @@ services:
       # por eso `'unsafe-inline'` en scripts. Lo compensa que solo se cargan
       # scripts del propio sitio y que no hay datos de terceros en la página.
       # Un dominio externo nuevo (analítica, video) se agrega aquí, con el
-      # visto bueno de José.
+      # visto bueno de José. `frame-src` permite solo el video de venta,
+      # embebido desde youtube-nocookie.com (aprobado el 2026-11-17).
       - path: /*
         name: Content-Security-Policy
-        value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self'; connect-src 'self' https://score-api-qa.onrender.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+        value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self' https://score-api-qa.onrender.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
       - path: /*
         name: Strict-Transport-Security
         value: max-age=31536000; includeSubDomains
