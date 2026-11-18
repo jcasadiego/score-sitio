@@ -2,14 +2,16 @@
 
 import { useEffect } from "react";
 import Hero from "@/components/sections/Hero";
-import Servicios from "@/components/sections/Servicios";
+import ParaQuien from "@/components/sections/ParaQuien";
 import VideoVenta from "@/components/sections/VideoVenta";
-import PorQue from "@/components/sections/PorQue";
+import Equipo from "@/components/sections/Equipo";
+import ComoFunciona from "@/components/sections/ComoFunciona";
+import Servicios from "@/components/sections/Servicios";
+import Contacto from "@/components/sections/Contacto";
 import Nosotros from "@/components/sections/Nosotros";
 import Aliados from "@/components/sections/Aliados";
+import PorQue from "@/components/sections/PorQue";
 import Faq from "@/components/sections/Faq";
-import Equipo from "@/components/sections/Equipo";
-import Contacto from "@/components/sections/Contacto";
 import { captureCampaignFromUrl } from "@/lib/campaign";
 
 export default function Home() {
@@ -20,14 +22,16 @@ export default function Home() {
   return (
     <main>
       <Hero />
-      <Servicios />
+      <ParaQuien />
       <VideoVenta />
-      <PorQue />
+      <Equipo />
+      <ComoFunciona />
+      <Servicios />
+      <Contacto />
       <Nosotros />
       <Aliados />
+      <PorQue />
       <Faq />
-      <Equipo />
-      <Contacto />
     </main>
   );
 }
