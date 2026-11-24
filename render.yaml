@@ -1,43 +1,20 @@
-# Blueprint de Render para el sitio de SCORE en QA.
+# Blueprint de Render para el sitio de SCORE.
 #
-# Sitio estático (gratuito, servido por la CDN de Render, no se duerme). PROD
-# no se define aquí: va en el workspace del cliente, con su propia URL de la
-# API en NEXT_PUBLIC_API_URL y en `connect-src` de la CSP.
-#
-# Este archivo lo mantiene José: el despliegue, las variables y las cabeceras
-# de seguridad no se cambian en un PR de maquetación.
-#
-# Ningún secreto vive aquí; el sitio no usa ninguno.
+# Sitio estático puro (HTML/CSS/JS, React via CDN).
+# No requiere build — Render sirve los archivos directamente.
+# Este archivo lo mantiene José.
 
 services:
   - type: web
     name: score-sitio-qa
     runtime: static
     branch: develop
-    buildCommand: npm ci && npm run build
-    staticPublishPath: out
-    # Despliega cada merge a `develop`, solo cuando el CI pasa.
+    staticPublishPath: version-c
     autoDeployTrigger: checksPass
-    envVars:
-      - key: NODE_VERSION
-        value: "22"
-      # Se leen al compilar: cambiarlas exige redesplegar. Sin la de la API,
-      # el build falla a propósito (next.config.ts).
-      - key: NEXT_PUBLIC_API_URL
-        value: https://score-api-qa.onrender.com
-      # https://<URL del sitio en QA>, para robots.txt y sitemap.xml.
-      - key: NEXT_PUBLIC_SITE_URL
-        sync: false
     headers:
-      # Un sitio exportado trae scripts en línea de Next sin nonce posible:
-      # por eso `'unsafe-inline'` en scripts. Lo compensa que solo se cargan
-      # scripts del propio sitio y que no hay datos de terceros en la página.
-      # Un dominio externo nuevo (analítica, video) se agrega aquí, con el
-      # visto bueno de José. `frame-src` permite solo el video de venta,
-      # embebido desde youtube-nocookie.com (aprobado el 2026-11-17).
       - path: /*
         name: Content-Security-Policy
-        value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self' https://score-api-qa.onrender.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+        value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self' https:; frame-ancestors 'none'; upgrade-insecure-requests"
       - path: /*
         name: Strict-Transport-Security
         value: max-age=31536000; includeSubDomains
@@ -53,8 +30,3 @@ services:
       - path: /*
         name: Permissions-Policy
         value: camera=(), geolocation=(), microphone=(), payment=(), usb=()
-      # Los archivos de `_next/static` llevan un hash en el nombre: cambian
-      # de nombre en cada versión, así que se pueden guardar un año.
-      - path: /_next/static/*
-        name: Cache-Control
-        value: public, max-age=31536000, immutable
