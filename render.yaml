@@ -1,7 +1,5 @@
 # Blueprint de Render para el sitio de SCORE.
-#
-# Sitio estático puro (HTML/CSS/JS, React via CDN).
-# No requiere build — Render sirve los archivos directamente.
+# Sitio estático puro (HTML/CSS/JS, React via CDN). Sin build.
 # Este archivo lo mantiene José.
 
 services:
@@ -9,7 +7,11 @@ services:
     name: score-sitio-qa
     runtime: static
     branch: develop
-    staticPublishPath: version-c
+    staticPublishPath: .
+    routes:
+      - type: redirect
+        source: /
+        destination: /version-c/
     autoDeployTrigger: checksPass
     headers:
       - path: /*
