@@ -1,15 +1,29 @@
 name: CI
 
 on:
-  push:
-    branches: ["**"]
   pull_request:
-    branches: ["**"]
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+
+permissions:
+  contents: read
 
 jobs:
+  # El nombre del job es el check requerido de `develop` y `main`: no cambiarlo.
   lint-and-build:
-    name: lint-and-build
     runs-on: ubuntu-latest
     steps:
-      - name: Static site — no build required
-        run: echo "Static HTML/CSS/JS — lint and build checks not applicable."
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Build y verificar dist/
+        run: SCORE_API_URL=https://api.invalid sh scripts/build.sh
+
+      - name: shellcheck
+        run: |
+          if command -v shellcheck >/dev/null 2>&1; then
+            shellcheck scripts/*.sh
+          else
+            sudo apt-get install -y shellcheck && shellcheck scripts/*.sh
+          fi

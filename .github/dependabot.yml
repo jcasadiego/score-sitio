@@ -1,0 +1,8 @@
+# Mantiene las actions fijadas por SHA actualizadas.
+# Van a `develop` como cualquier PR: pasan por CI y José los revisa antes de mergear.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: develop
+    schedule: { interval: weekly }

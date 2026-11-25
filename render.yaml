@@ -1,22 +1,23 @@
-# Blueprint de Render para el sitio de SCORE.
-# Sitio estático puro (HTML/CSS/JS, React via CDN). Sin build.
-# Este archivo lo mantiene José.
+# Blueprint de Render para score-sitio-qa.
+# José aplica los cambios en el dashboard (Settings) — este archivo es documentación + Blueprint.
+# En producción, cambiar SCORE_API_URL al origen de la API de producción
+# y actualizar connect-src en la CSP con ese origen.
 
 services:
   - type: web
     name: score-sitio-qa
     runtime: static
     branch: develop
-    staticPublishPath: .
-    routes:
-      - type: redirect
-        source: /
-        destination: /version-c/
+    buildCommand: sh scripts/build.sh
+    staticPublishPath: dist
     autoDeployTrigger: checksPass
+    envVars:
+      - key: SCORE_API_URL
+        sync: false  # José la ingresa manualmente en el dashboard: https://score-api-qa.onrender.com
     headers:
       - path: /*
         name: Content-Security-Policy
-        value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self' https:; frame-ancestors 'none'; upgrade-insecure-requests"
+        value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self' https://score-api-qa.onrender.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
       - path: /*
         name: Strict-Transport-Security
         value: max-age=31536000; includeSubDomains
