@@ -4,6 +4,54 @@ Landing pública de SCORE (Music Finance Pro). Sitio estático HTML/CSS/JS con R
 
 ---
 
+## Estructura del repo
+
+```
+score-sitio/
+├── assets/              # Imágenes, videos, logos (sirven en dist/assets/)
+├── vendor/              # React + ReactDOM production builds (sin CDN externo)
+├── version-c/
+│   └── index.html       # Versión aprobada — único archivo fuente del sitio
+├── version-a/           # Referencia histórica — no se publica
+├── version-b/           # Referencia histórica — no se publica
+├── scripts/
+│   └── build.sh         # Genera dist/ a partir de version-c/
+├── .github/
+│   ├── workflows/ci.yml         # lint-and-build (check requerido en develop)
+│   ├── workflows/security.yml   # gitleaks + CodeQL
+│   └── dependabot.yml           # Actualiza actions fijadas por SHA
+├── render.yaml          # Blueprint de Render (documentación + config)
+└── dist/                # Artefacto de build — en .gitignore, no commitear
+```
+
+---
+
+## Arquitectura de `version-c/index.html`
+
+El archivo (~1400 líneas) contiene todo el sitio: HTML, CSS inline y un componente React class en JS puro sin transpilación.
+
+**Puntos de entrada del JS (cerca del final del archivo):**
+- `var SCORE_API_URL = '__SCORE_API_URL__'` — el build script reemplaza este placeholder con el valor de la variable de entorno.
+- `var WA_NUMBER = ''` — vacío hasta que José pase el número.
+- `ReactDOM.createRoot(...).render(h(Component, __defaults))` — monta el componente.
+
+**Dentro de la clase `Component`:**
+- `_init()` — inicializa `this._h` (todos los handlers) y `this._form` (valores del formulario). Se llama desde `componentDidMount` y `renderVals`.
+- `this._h.submit` — handler del formulario: valida, construye payload, llama a la API, maneja 201/400/429/5xx/red.
+- `renderVals()` — devuelve el objeto de datos que consume la función de plantilla `__tpl`.
+- `__tpl(s0, s)` (fuera de la clase, línea ~537) — la plantilla completa como llamadas `h()` (`React.createElement`). Es una sola línea minificada. Para modificar la UI hay que editar esta función.
+
+**Estado relevante del formulario:**
+| Clave | Descripción |
+|---|---|
+| `loading` | Envío en curso — bloquea doble submit |
+| `sent` | Éxito (201) |
+| `netErr` | Error de red, timeout, 5xx o 400 genérico — muestra botón "Intentar de nuevo" |
+| `err429` | Rate limit (429) |
+| `err` | Objeto `{ campo: true }` — errores de validación o de campo desde la API |
+
+---
+
 ## Construir y probar en local
 
 ```sh
